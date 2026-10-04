@@ -2,8 +2,6 @@
 
 > My practical reading notes on \*\*Finding the Right Fit: Model-Harness Interactions across Agent Tasks\*\*.
 
-!\[Desktop preview](assets/preview-desktop.png)
-
 ## Why I wrote this
 
 Coming from BI and data engineering, I would not trust a dashboard only because the visual looks good. I would check the source, semantic grain, refresh logic, security and validation.
