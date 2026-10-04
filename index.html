@@ -1,0 +1,4599 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Self-contained build: CSS, data, and JavaScript are embedded so this file works when opened directly. -->
+  <meta name="description" content="My practical reading notes on Finding the Right Fit: Model-Harness Interactions across Agent Tasks, with interactive score-cost exploration and enterprise agent design lessons.">
+  <meta name="author" content="Om">
+  <meta name="theme-color" content="#626d55">
+  <meta property="og:title" content="The Best Model Is Not Enough">
+  <meta property="og:description" content="An engineer's interactive reading notes on model-harness fit in agent systems.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="assets/social-preview.png">
+  <meta property="og:image:alt" content="The Best Model Is Not Enough - interactive model-harness fit reading notes">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Best Model Is Not Enough">
+  <meta name="twitter:description" content="An engineer's interactive reading notes on model-harness fit in agent systems.">
+  <meta name="twitter:image" content="assets/social-preview.png">
+  <title>The Best Model Is Not Enough | Model-Harness Fit</title>
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTYiIGZpbGw9IiM2MjZkNTUiLz4KICA8cGF0aCBkPSJNMTQgNDNWMjFoN2w3IDExIDctMTFoN3YyMmgtNlYzMGwtOCAxMi04LTEydjEzeiIgZmlsbD0iI2ZmZmRmOCIvPgogIDxwYXRoIGQ9Ik00NyAxOGgzTDE3IDQ2aC0zeiIgZmlsbD0iI2Q5OGI2OSIvPgo8L3N2Zz4K" type="image/svg+xml">
+  <style>
+:root {
+  --bg: #f5f1e9;
+  --surface: #fffdf8;
+  --surface-2: #ebe4d8;
+  --surface-3: #ded5c7;
+  --ink: #23251f;
+  --ink-soft: #565a4e;
+  --ink-faint: #74786b;
+  --line: #d7cfc1;
+  --line-strong: #b9af9f;
+  --accent: #626d55;
+  --accent-strong: #46513b;
+  --accent-soft: #dfe5d7;
+  --warm: #b6603e;
+  --warm-soft: #f1ded3;
+  --gold: #a47a30;
+  --danger: #9d4936;
+  --success: #4e6a48;
+  --shadow: 0 18px 46px rgba(47, 42, 32, 0.09);
+  --shadow-sm: 0 8px 24px rgba(47, 42, 32, 0.07);
+  --radius: 22px;
+  --radius-sm: 13px;
+  --header-h: 70px;
+  --content-w: 920px;
+  --rail-w: 230px;
+  --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --serif: Georgia, "Times New Roman", serif;
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  --bg: #171914;
+  --surface: #20231c;
+  --surface-2: #292d24;
+  --surface-3: #34382f;
+  --ink: #f1efe8;
+  --ink-soft: #c0c5b8;
+  --ink-faint: #979d90;
+  --line: #3b4035;
+  --line-strong: #555b4d;
+  --accent: #a7b596;
+  --accent-strong: #ced8c2;
+  --accent-soft: #30392b;
+  --warm: #df8a65;
+  --warm-soft: #472e24;
+  --gold: #d3ad60;
+  --danger: #e28b76;
+  --success: #9dbc91;
+  --shadow: 0 18px 46px rgba(0, 0, 0, 0.22);
+  --shadow-sm: 0 8px 24px rgba(0, 0, 0, 0.18);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 26px);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.68;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--surface);
+}
+
+a {
+  color: var(--accent-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--warm);
+}
+
+button,
+select,
+input {
+  font: inherit;
+}
+
+button,
+a,
+select,
+input,
+summary {
+  outline-offset: 3px;
+}
+
+button:focus-visible,
+a:focus-visible,
+select:focus-visible,
+input:focus-visible,
+summary:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--warm) 65%, transparent);
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 500;
+  left: 16px;
+  top: -80px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: var(--ink);
+  color: var(--surface);
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 14px;
+}
+
+.reading-progress {
+  position: fixed;
+  z-index: 300;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: transparent;
+}
+
+.reading-progress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--warm);
+}
+
+.site-header {
+  position: sticky;
+  z-index: 200;
+  top: 0;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  min-height: var(--header-h);
+  padding: 0 34px;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 78%, transparent);
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  width: max-content;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 740;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+}
+
+.brand:hover {
+  color: var(--ink);
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  color: var(--accent-strong);
+  font-size: 12px;
+  letter-spacing: -0.04em;
+}
+
+.top-nav {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+.top-nav a {
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.top-nav a:hover {
+  color: var(--ink);
+}
+
+.header-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.icon-button,
+.menu-button {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.icon-button:hover,
+.menu-button:hover {
+  transform: translateY(-1px);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.icon-button svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.theme-moon {
+  display: none;
+}
+
+html[data-theme="dark"] .theme-sun {
+  display: none;
+}
+
+html[data-theme="dark"] .theme-moon {
+  display: block;
+}
+
+.menu-button {
+  display: none;
+  gap: 3px;
+}
+
+.menu-button span:not(.sr-only) {
+  width: 16px;
+  height: 1.5px;
+  background: currentColor;
+}
+
+.mobile-nav {
+  position: fixed;
+  z-index: 190;
+  inset: var(--header-h) 0 auto 0;
+  max-height: calc(100vh - var(--header-h));
+  overflow: auto;
+  padding: 20px 24px 30px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.mobile-nav a {
+  display: block;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.page-shell {
+  display: grid;
+  grid-template-columns: var(--rail-w) minmax(0, var(--content-w));
+  justify-content: center;
+  gap: 58px;
+  width: 100%;
+  padding: 0 36px;
+}
+
+.side-rail {
+  position: sticky;
+  top: calc(var(--header-h) + 34px);
+  align-self: start;
+  max-height: calc(100vh - var(--header-h) - 50px);
+  overflow: auto;
+  padding: 10px 4px 24px;
+  scrollbar-width: thin;
+}
+
+.side-label,
+.eyebrow,
+.kicker,
+.frame-label {
+  margin: 0;
+  color: var(--accent-strong);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.toc {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: 13px;
+}
+
+.toc a {
+  position: relative;
+  padding: 8px 8px 8px 15px;
+  border-radius: 8px;
+  color: var(--ink-faint);
+  font-size: 12.5px;
+  font-weight: 590;
+  line-height: 1.4;
+  text-decoration: none;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.toc a::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--line-strong);
+  transform: translateY(-50%);
+}
+
+.toc a:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.toc a.active {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-weight: 760;
+}
+
+.toc a.active::before {
+  background: var(--warm);
+}
+
+.side-note {
+  margin-top: 24px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+}
+
+.side-note p {
+  margin: 7px 0 0;
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+main {
+  min-width: 0;
+}
+
+.hero {
+  padding: 92px 0 58px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(290px, 0.85fr);
+  align-items: stretch;
+  gap: 40px;
+}
+
+.hero-copy {
+  padding: 18px 0 8px;
+}
+
+.hero h1 {
+  max-width: 720px;
+  margin: 15px 0 22px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: clamp(48px, 7vw, 82px);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.99;
+}
+
+.hero h1 em {
+  color: var(--warm);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.hero-lede {
+  max-width: 680px;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: clamp(19px, 2.2vw, 23px);
+  line-height: 1.52;
+}
+
+.hero-lede strong {
+  color: var(--ink);
+  font-weight: 690;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 11px 18px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 740;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button.primary {
+  background: var(--accent-strong);
+  color: var(--surface);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+html[data-theme="dark"] .button.primary {
+  color: #171914;
+}
+
+.button.primary:hover {
+  background: var(--accent);
+  color: var(--surface);
+}
+
+html[data-theme="dark"] .button.primary:hover {
+  color: #171914;
+}
+
+.button.secondary {
+  border-color: var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.button.secondary:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.button.compact {
+  min-height: 40px;
+  padding: 9px 15px;
+  font-size: 13px;
+}
+
+.source-line {
+  max-width: 640px;
+  margin: 22px 0 0;
+  color: var(--ink-faint);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.hero-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 110% -10%, color-mix(in srgb, var(--warm) 12%, transparent), transparent 42%),
+    var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.hero-panel-top {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 720;
+  letter-spacing: 0.03em;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--warm);
+  box-shadow: 0 0 0 5px var(--warm-soft);
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.metric {
+  min-height: 94px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 75%, var(--bg));
+}
+
+.metric.wide {
+  grid-column: 1 / -1;
+}
+
+.metric strong {
+  display: block;
+  color: var(--accent-strong);
+  font-family: var(--serif);
+  font-size: 34px;
+  font-weight: 560;
+  line-height: 1;
+}
+
+.metric span {
+  display: block;
+  margin-top: 8px;
+  color: var(--ink-faint);
+  font-size: 11px;
+  font-weight: 710;
+  letter-spacing: 0.05em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.panel-conclusion {
+  margin-top: auto;
+  padding-top: 28px;
+}
+
+.panel-conclusion span {
+  display: block;
+  color: var(--ink-faint);
+  font-size: 11px;
+  font-weight: 760;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.panel-conclusion strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--ink);
+  font-size: 18px;
+}
+
+.personal-frame {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 24px;
+  margin-top: 46px;
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.personal-frame p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-family: var(--serif);
+  font-size: 20px;
+  line-height: 1.62;
+}
+
+.content-section {
+  padding: 96px 0 18px;
+}
+
+.content-section.first {
+  padding-top: 72px;
+}
+
+.section-heading {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 34px;
+}
+
+.section-number {
+  margin: 2px 0 0;
+  color: var(--warm);
+  font-family: var(--serif);
+  font-size: 18px;
+  font-style: italic;
+}
+
+.section-heading h2 {
+  max-width: 780px;
+  margin: 8px 0 0;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: clamp(35px, 5vw, 53px);
+  font-weight: 520;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+}
+
+.lead-paragraph {
+  max-width: 830px;
+  margin: 0 0 34px 74px;
+  color: var(--ink-soft);
+  font-size: 20px;
+  line-height: 1.65;
+}
+
+.lead-paragraph strong {
+  color: var(--ink);
+}
+
+.question-switch {
+  display: grid;
+  grid-template-columns: 1fr 48px 1fr;
+  align-items: center;
+  margin: 10px 0 42px 74px;
+}
+
+.question-card {
+  min-height: 164px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.question-card.muted {
+  background: var(--surface-2);
+}
+
+.question-card.emphasized {
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--line));
+  background: var(--accent-soft);
+}
+
+.question-card span {
+  display: block;
+  color: var(--ink-faint);
+  font-size: 11px;
+  font-weight: 760;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.question-card strong {
+  display: block;
+  margin-top: 16px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 560;
+  line-height: 1.35;
+}
+
+.switch-arrow {
+  color: var(--warm);
+  font-size: 25px;
+  text-align: center;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-left: 74px;
+}
+
+.summary-card {
+  position: relative;
+  min-height: 225px;
+  padding: 25px 24px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.summary-index {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  color: var(--warm);
+  font-family: var(--serif);
+  font-size: 14px;
+  font-style: italic;
+}
+
+.summary-card h3 {
+  margin: 20px 0 10px;
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.summary-card p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.plain-language-box {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 18px;
+  align-items: start;
+  margin: 26px 0 0 74px;
+  padding: 24px;
+  border: 1px solid color-mix(in srgb, var(--warm) 34%, var(--line));
+  border-radius: var(--radius);
+  background: var(--warm-soft);
+}
+
+.plain-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--warm);
+  color: #fff8f2;
+  font-family: var(--serif);
+  font-size: 23px;
+  font-style: italic;
+}
+
+.plain-language-box h3 {
+  margin: 0 0 7px;
+  font-size: 17px;
+}
+
+.plain-language-box p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 15px;
+}
+
+.analogy-switcher {
+  margin-left: 74px;
+}
+
+.segmented-control {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+
+.segmented-control button {
+  padding: 8px 15px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.segmented-control button[aria-selected="true"] {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.analogy-panel {
+  margin-top: 16px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.analogy-map {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.analogy-item {
+  min-height: 130px;
+  padding: 18px;
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+
+.analogy-item span {
+  display: block;
+  color: var(--warm);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.analogy-item strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 17px;
+}
+
+.analogy-item p {
+  margin: 8px 0 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.analogy-takeaway {
+  margin: 18px 0 0;
+  padding-top: 17px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.agent-loop {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 28px 1fr 28px 1fr 28px 1fr;
+  align-items: center;
+  gap: 5px;
+  margin: 32px 0 0 74px;
+  padding-bottom: 58px;
+}
+
+.loop-node {
+  min-height: 145px;
+  padding: 18px 15px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  text-align: center;
+}
+
+.loop-node span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin: 0 auto 13px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--warm);
+  font-family: var(--serif);
+  font-size: 13px;
+}
+
+.loop-node strong {
+  display: block;
+  font-size: 15px;
+}
+
+.loop-node small {
+  display: block;
+  margin-top: 8px;
+  color: var(--ink-faint);
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.loop-link {
+  color: var(--line-strong);
+  font-size: 18px;
+  text-align: center;
+}
+
+.feedback-line {
+  position: absolute;
+  right: 5.5%;
+  bottom: 8px;
+  left: 27%;
+  height: 32px;
+  border-right: 1px solid var(--warm);
+  border-bottom: 1px solid var(--warm);
+  border-left: 1px solid var(--warm);
+  border-radius: 0 0 12px 12px;
+  text-align: center;
+}
+
+.feedback-line::before {
+  content: "↑";
+  position: absolute;
+  left: -5px;
+  top: -15px;
+  color: var(--warm);
+}
+
+.feedback-line span {
+  position: relative;
+  top: 18px;
+  padding: 0 9px;
+  background: var(--bg);
+  color: var(--warm);
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.definition-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 28px 0 0 74px;
+}
+
+.definition-grid article {
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+}
+
+.definition-grid h3 {
+  margin: 0 0 7px;
+  color: var(--accent-strong);
+  font-size: 16px;
+}
+
+.definition-grid p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 13.5px;
+}
+
+.evidence-drawer {
+  margin: 18px 0 0 74px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.evidence-drawer summary {
+  padding: 18px 20px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 760;
+  cursor: pointer;
+}
+
+.evidence-drawer[open] summary {
+  border-bottom: 1px solid var(--line);
+}
+
+.drawer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+}
+
+.drawer-grid div {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.drawer-grid div:nth-child(odd) {
+  border-right: 1px solid var(--line);
+}
+
+.drawer-grid div:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+.drawer-grid strong,
+.drawer-grid span {
+  display: block;
+}
+
+.drawer-grid strong {
+  font-size: 13px;
+}
+
+.drawer-grid span {
+  margin-top: 4px;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+.study-equation {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin: 0 0 30px 74px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.equation-part {
+  display: flex;
+  flex: 0 0 105px;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 104px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: var(--surface);
+  text-align: center;
+}
+
+.equation-part.result {
+  background: var(--accent-soft);
+}
+
+.equation-part.total {
+  border-color: var(--warm);
+  background: var(--warm-soft);
+}
+
+.equation-part strong {
+  color: var(--accent-strong);
+  font-family: var(--serif);
+  font-size: 31px;
+  font-weight: 560;
+  line-height: 1;
+}
+
+.equation-part span {
+  margin-top: 8px;
+  color: var(--ink-faint);
+  font-size: 10px;
+  font-weight: 720;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.operator {
+  display: grid;
+  flex: 0 0 22px;
+  place-items: center;
+  color: var(--warm);
+  font-family: var(--serif);
+  font-size: 23px;
+}
+
+.study-columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-left: 74px;
+}
+
+.study-card {
+  padding: 23px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.clean-list {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.clean-list li {
+  padding: 11px 0;
+  border-top: 1px solid var(--line);
+}
+
+.clean-list strong,
+.clean-list span {
+  display: block;
+}
+
+.clean-list strong {
+  font-size: 14px;
+}
+
+.clean-list span {
+  margin-top: 2px;
+  color: var(--ink-faint);
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.mini-note {
+  margin: 16px 0 0;
+  padding-top: 15px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.method-table-wrap,
+.data-table-wrap {
+  margin: 24px 0 0 74px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.method-table,
+.data-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.method-table caption,
+.data-table caption {
+  padding: 18px 20px 10px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 760;
+  text-align: left;
+}
+
+.method-table th,
+.method-table td,
+.data-table th,
+.data-table td {
+  padding: 15px 17px;
+  border-top: 1px solid var(--line);
+  vertical-align: top;
+  text-align: left;
+}
+
+.method-table th,
+.data-table th {
+  color: var(--ink-faint);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.method-table td:first-child {
+  width: 19%;
+  color: var(--ink);
+  font-weight: 720;
+}
+
+.method-table td:nth-child(2) {
+  width: 43%;
+}
+
+.method-table td {
+  color: var(--ink-soft);
+}
+
+.caution-callout {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 18px;
+  margin: 24px 0 0 74px;
+  padding: 22px;
+  border-left: 4px solid var(--warm);
+  border-radius: 0 14px 14px 0;
+  background: var(--warm-soft);
+}
+
+.caution-callout strong {
+  color: var(--warm);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.caution-callout p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.finding-block {
+  display: grid;
+  grid-template-columns: 74px 1fr;
+  gap: 0;
+  margin-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.finding-number {
+  padding-top: 31px;
+  color: var(--warm);
+  font-family: var(--serif);
+  font-size: 18px;
+  font-style: italic;
+}
+
+.finding-body {
+  padding: 30px 0 38px;
+}
+
+.finding-body h3 {
+  max-width: 780px;
+  margin: 8px 0 14px;
+  font-family: var(--serif);
+  font-size: 29px;
+  font-weight: 560;
+  letter-spacing: -0.02em;
+  line-height: 1.22;
+}
+
+.finding-body > p:not(.eyebrow) {
+  max-width: 790px;
+  margin: 10px 0 0;
+  color: var(--ink-soft);
+  font-size: 16px;
+}
+
+.finding-conclusion {
+  margin-top: 18px;
+  padding: 17px 19px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.finding-body details {
+  margin-top: 17px;
+  border-top: 1px dashed var(--line-strong);
+}
+
+.finding-body summary {
+  padding: 14px 0 0;
+  color: var(--accent-strong);
+  font-size: 13px;
+  font-weight: 760;
+  cursor: pointer;
+}
+
+.finding-body details p {
+  margin: 10px 0 0;
+  padding: 0 0 3px;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.winner-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.winner-strip span {
+  padding: 11px 13px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  font-size: 11.5px;
+}
+
+.winner-strip span:last-child {
+  grid-column: 1 / -1;
+}
+
+.winner-strip strong {
+  display: inline-block;
+  min-width: 76px;
+  color: var(--ink);
+}
+
+.interactive-section {
+  position: relative;
+}
+
+.control-row,
+.lab-controls,
+.builder-controls,
+.table-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-left: 74px;
+}
+
+.control-row label,
+.lab-controls label:not(.checkbox-label),
+.builder-controls label,
+.table-toolbar label,
+.glossary-search {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--ink-faint);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+select,
+input[type="search"] {
+  min-height: 42px;
+  padding: 9px 36px 9px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+input[type="search"] {
+  min-width: 210px;
+  padding-right: 12px;
+}
+
+.flip-summary {
+  margin: 22px 0 0 74px;
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.flip-summary strong {
+  color: var(--ink);
+}
+
+.flip-summary .reversal {
+  color: var(--warm);
+  font-weight: 780;
+}
+
+.flip-chart {
+  margin: 16px 0 0 74px;
+  padding: 23px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.flip-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 66px;
+  gap: 14px;
+  align-items: center;
+  padding: 13px 0;
+  border-top: 1px solid var(--line);
+}
+
+.flip-row:first-child {
+  border-top: 0;
+}
+
+.flip-harness {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 730;
+}
+
+.flip-bars {
+  position: relative;
+  display: grid;
+  gap: 6px;
+}
+
+.flip-bar-line {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  align-items: center;
+  gap: 8px;
+}
+
+.flip-model-label {
+  overflow: hidden;
+  color: var(--ink-faint);
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flip-track {
+  height: 11px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+
+.flip-fill {
+  height: 100%;
+  min-width: 2px;
+  border-radius: inherit;
+  background: var(--accent);
+}
+
+.flip-fill.model-b {
+  background: var(--warm);
+}
+
+.flip-gap {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 650;
+  text-align: right;
+}
+
+.flip-gap.positive {
+  color: var(--success);
+}
+
+.flip-gap.negative {
+  color: var(--danger);
+}
+
+.chart-note,
+.data-footnote {
+  margin: 14px 0 0 74px;
+  color: var(--ink-faint);
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+
+.lab-controls {
+  align-items: end;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 4px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 680;
+}
+
+.checkbox-label input {
+  accent-color: var(--accent);
+}
+
+.small-button {
+  min-height: 42px;
+  padding: 9px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 740;
+  cursor: pointer;
+}
+
+.small-button:hover {
+  border-color: var(--accent);
+}
+
+.lab-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 22px 0 0 74px;
+}
+
+.lab-kpi {
+  padding: 17px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.lab-kpi span,
+.lab-kpi strong {
+  display: block;
+}
+
+.lab-kpi span {
+  color: var(--ink-faint);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lab-kpi strong {
+  margin-top: 8px;
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.chart-card {
+  margin: 14px 0 0 74px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.chart-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 22px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.chart-card-head h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.chart-card-head p {
+  margin: 4px 0 0;
+  color: var(--ink-faint);
+  font-size: 11.5px;
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px 12px;
+  max-width: 470px;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ink-soft);
+  font-size: 10px;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.scatter-wrap {
+  position: relative;
+  min-height: 430px;
+  padding: 8px 10px 12px;
+}
+
+#scatter-chart {
+  display: block;
+  width: 100%;
+  min-width: 640px;
+  height: auto;
+  overflow: visible;
+}
+
+.scatter-wrap {
+  overflow-x: auto;
+}
+
+.chart-tooltip {
+  position: fixed;
+  z-index: 400;
+  width: 230px;
+  padding: 12px 13px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--ink);
+  color: var(--surface);
+  box-shadow: var(--shadow);
+  pointer-events: none;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.chart-tooltip strong {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 12px;
+}
+
+.chart-tooltip span {
+  display: block;
+  opacity: 0.8;
+}
+
+.table-toolbar {
+  align-items: end;
+  margin-top: 20px;
+}
+
+.table-toolbar .table-count {
+  align-self: center;
+  margin-left: auto;
+  color: var(--ink-faint);
+  font-size: 12px;
+}
+
+.data-table-wrap {
+  max-height: 560px;
+  overflow: auto;
+}
+
+.data-table thead {
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  background: var(--surface);
+}
+
+.data-table td {
+  color: var(--ink-soft);
+}
+
+.data-table td:first-child,
+.data-table td:nth-child(2) {
+  color: var(--ink);
+  font-weight: 670;
+}
+
+.type-pill,
+.result-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 23px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.type-pill.native {
+  background: var(--warm-soft);
+  color: var(--warm);
+}
+
+.result-pill.best {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.case-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: 74px;
+}
+
+.case-tabs button {
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 730;
+  cursor: pointer;
+}
+
+.case-tabs button[aria-selected="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.case-panel {
+  margin: 16px 0 0 74px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.case-intro {
+  display: grid;
+  grid-template-columns: 1fr 230px;
+  gap: 26px;
+}
+
+.case-intro h3 {
+  margin: 8px 0 12px;
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 560;
+  line-height: 1.18;
+}
+
+.case-intro p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.case-result-box {
+  align-self: start;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+
+.case-result-box span,
+.case-result-box strong {
+  display: block;
+}
+
+.case-result-box span {
+  color: var(--ink-faint);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.case-result-box strong {
+  margin-top: 5px;
+  font-size: 15px;
+}
+
+.trace-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.trace-card {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: color-mix(in srgb, var(--surface) 75%, var(--bg));
+}
+
+.trace-card.pass {
+  border-top: 4px solid var(--success);
+}
+
+.trace-card.fail {
+  border-top: 4px solid var(--danger);
+}
+
+.trace-card h4 {
+  margin: 0 0 15px;
+  font-size: 14px;
+}
+
+.trace-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trace-steps li {
+  position: relative;
+  padding: 0 0 14px 20px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.trace-steps li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--line-strong);
+}
+
+.trace-steps li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 14px;
+  bottom: -2px;
+  width: 1px;
+  background: var(--line);
+}
+
+.trace-steps strong {
+  color: var(--ink);
+}
+
+.case-lesson {
+  margin-top: 20px;
+  padding: 18px 20px;
+  border-left: 4px solid var(--warm);
+  background: var(--warm-soft);
+  color: var(--ink-soft);
+  font-size: 13.5px;
+}
+
+.recovery-numbers {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 22px 0 0 74px;
+}
+
+.recovery-numbers div {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.recovery-numbers strong,
+.recovery-numbers span {
+  display: block;
+}
+
+.recovery-numbers strong {
+  color: var(--accent-strong);
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 560;
+}
+
+.recovery-numbers span {
+  margin-top: 6px;
+  color: var(--ink-faint);
+  font-size: 10.5px;
+  line-height: 1.45;
+}
+
+.lesson-split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 20px 0 0 74px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--line);
+}
+
+.lesson-split > div {
+  padding: 25px;
+  background: var(--surface);
+}
+
+.lesson-split h3 {
+  margin: 8px 0 10px;
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 560;
+}
+
+.lesson-split p:not(.eyebrow) {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 13.5px;
+}
+
+.interpretation-banner {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 20px;
+  margin: 0 0 24px 74px;
+  padding: 19px 21px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-2);
+}
+
+.interpretation-banner strong {
+  color: var(--accent-strong);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.interpretation-banner p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.enterprise-scenarios {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 13px;
+  margin-left: 74px;
+}
+
+.enterprise-scenarios article {
+  padding: 23px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.scenario-tag {
+  display: inline-flex;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.enterprise-scenarios h3 {
+  margin: 16px 0 10px;
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 560;
+  line-height: 1.25;
+}
+
+.enterprise-scenarios p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.enterprise-scenarios ul {
+  margin: 17px 0 0;
+  padding-left: 17px;
+  color: var(--ink-soft);
+  font-size: 11.5px;
+}
+
+.enterprise-scenarios li {
+  margin-top: 6px;
+}
+
+.architecture-principles {
+  margin: 28px 0 0 74px;
+}
+
+.architecture-principles h3 {
+  margin: 0 0 14px;
+  font-family: var(--serif);
+  font-size: 27px;
+  font-weight: 560;
+}
+
+.principle-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.principle-grid div {
+  display: grid;
+  grid-template-columns: 145px 1fr;
+  gap: 12px;
+  padding: 15px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+}
+
+.principle-grid strong {
+  font-size: 12px;
+}
+
+.principle-grid span {
+  color: var(--ink-soft);
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.eval-builder {
+  margin: 28px 0 0 74px;
+  padding: 25px;
+  border: 1px solid color-mix(in srgb, var(--accent) 43%, var(--line));
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+}
+
+.builder-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: start;
+}
+
+.builder-head h3 {
+  margin: 7px 0 0;
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 560;
+}
+
+.builder-head > span {
+  color: var(--ink-faint);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.builder-controls {
+  margin: 20px 0 0;
+}
+
+.plan-output {
+  margin-top: 18px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.plan-output h4 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+
+.plan-output ol {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--ink-soft);
+  font-size: 12.5px;
+}
+
+.plan-output li {
+  margin-top: 7px;
+}
+
+.eval-builder .button {
+  margin-top: 14px;
+}
+
+.copy-status {
+  margin-left: 10px;
+  color: var(--accent-strong);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.decision-rule {
+  margin: 28px 0 0 74px;
+  padding: 28px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.decision-rule blockquote {
+  margin: 13px 0 0;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 25px;
+  line-height: 1.45;
+}
+
+.limits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+  margin-left: 74px;
+}
+
+.limits-grid article {
+  padding: 21px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: var(--surface);
+}
+
+.limits-grid strong {
+  display: block;
+  font-size: 14px;
+}
+
+.limits-grid p {
+  margin: 8px 0 0;
+  color: var(--ink-soft);
+  font-size: 12.5px;
+}
+
+.do-not-claim {
+  margin: 20px 0 0 74px;
+  padding: 27px;
+  border: 1px solid color-mix(in srgb, var(--warm) 33%, var(--line));
+  border-radius: var(--radius);
+  background: var(--warm-soft);
+}
+
+.do-not-claim h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 25px;
+  font-weight: 560;
+}
+
+.do-not-claim ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px 18px;
+  margin: 18px 0 0;
+  padding-left: 18px;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.do-not-claim p {
+  margin: 20px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid color-mix(in srgb, var(--warm) 30%, var(--line));
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.closing-section {
+  padding-bottom: 50px;
+}
+
+.closing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-left: 74px;
+}
+
+.closing-statement {
+  padding: 25px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.closing-statement.strong {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.closing-statement span {
+  color: var(--ink-faint);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.closing-statement p {
+  margin: 14px 0 0;
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1.45;
+}
+
+.final-list {
+  margin: 24px 0 0 74px;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+.final-list li {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.final-list span {
+  color: var(--warm);
+  font-family: var(--serif);
+  font-size: 14px;
+  font-style: italic;
+}
+
+.final-list p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 620;
+}
+
+.final-formula {
+  margin: 30px 0 0 74px;
+  padding: 31px;
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--surface);
+  text-align: center;
+}
+
+.final-formula span,
+.final-formula strong,
+.final-formula small {
+  display: block;
+}
+
+.final-formula span {
+  opacity: 0.65;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.final-formula strong {
+  max-width: 690px;
+  margin: 14px auto 0;
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 560;
+  line-height: 1.42;
+}
+
+.final-formula small {
+  margin-top: 10px;
+  color: var(--warm);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.glossary-search {
+  max-width: 360px;
+  margin-left: 74px;
+}
+
+.glossary-search input {
+  width: 100%;
+}
+
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 20px 0 0 74px;
+}
+
+.glossary-item {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.glossary-item h3 {
+  margin: 0;
+  color: var(--accent-strong);
+  font-size: 15px;
+}
+
+.glossary-item p {
+  margin: 7px 0 0;
+  color: var(--ink-soft);
+  font-size: 12.5px;
+}
+
+.source-boundary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-left: 74px;
+}
+
+.source-boundary div {
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: var(--surface);
+}
+
+.source-boundary strong {
+  display: block;
+  color: var(--accent-strong);
+  font-size: 13px;
+}
+
+.source-boundary p {
+  margin: 7px 0 0;
+  color: var(--ink-soft);
+  font-size: 12.5px;
+}
+
+.source-list {
+  display: grid;
+  gap: 10px;
+  margin: 20px 0 0 74px;
+}
+
+.source-list article {
+  display: grid;
+  grid-template-columns: 120px 1.2fr 1.5fr auto;
+  gap: 18px;
+  align-items: center;
+  padding: 19px 21px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.source-list span {
+  color: var(--ink-faint);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.source-list h3 {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.35;
+}
+
+.source-list p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.source-list a {
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 740;
+}
+
+.citation-box {
+  margin: 22px 0 0 74px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: var(--surface-2);
+}
+
+.citation-box pre {
+  margin: 16px 0 0;
+  overflow-x: auto;
+  color: var(--ink-soft);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.55;
+  white-space: pre;
+}
+
+.site-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  align-items: end;
+  max-width: calc(var(--rail-w) + var(--content-w) + 58px);
+  margin: 100px auto 0;
+  padding: 34px 36px 46px;
+  border-top: 1px solid var(--line);
+}
+
+.site-footer strong {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 560;
+}
+
+.site-footer p {
+  margin: 6px 0 0;
+  color: var(--ink-faint);
+  font-size: 11px;
+}
+
+.site-footer a {
+  font-size: 12px;
+  font-weight: 730;
+  white-space: nowrap;
+}
+
+.noscript {
+  position: fixed;
+  z-index: 600;
+  right: 15px;
+  bottom: 15px;
+  max-width: 400px;
+  padding: 15px;
+  border: 1px solid var(--warm);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  font-size: 12px;
+}
+
+@media (max-width: 1160px) {
+  :root {
+    --content-w: min(840px, calc(100vw - 300px));
+    --rail-w: 205px;
+  }
+
+  .page-shell {
+    gap: 34px;
+    padding: 0 26px;
+  }
+
+  .site-header {
+    padding: 0 24px;
+  }
+
+  .top-nav {
+    gap: 18px;
+  }
+
+  .top-nav a {
+    font-size: 12px;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr 340px;
+    gap: 28px;
+  }
+
+  .enterprise-scenarios {
+    grid-template-columns: 1fr;
+  }
+
+  .enterprise-scenarios article {
+    display: grid;
+    grid-template-columns: 160px 1fr 1.25fr;
+    gap: 18px;
+    align-items: start;
+  }
+
+  .enterprise-scenarios h3 {
+    margin-top: 0;
+  }
+
+  .enterprise-scenarios ul {
+    margin-top: 0;
+  }
+
+  .source-list article {
+    grid-template-columns: 100px 1fr;
+  }
+
+  .source-list p,
+  .source-list a {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 930px) {
+  :root {
+    --content-w: 100%;
+  }
+
+  .site-header {
+    grid-template-columns: 1fr auto;
+  }
+
+  .top-nav {
+    display: none;
+  }
+
+  .menu-button {
+    display: grid;
+  }
+
+  .page-shell {
+    display: block;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  .side-rail {
+    display: none;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr 330px;
+  }
+
+  .content-section,
+  .content-section.first {
+    padding-top: 78px;
+  }
+
+  .lead-paragraph,
+  .question-switch,
+  .summary-grid,
+  .plain-language-box,
+  .analogy-switcher,
+  .agent-loop,
+  .definition-grid,
+  .evidence-drawer,
+  .study-equation,
+  .study-columns,
+  .method-table-wrap,
+  .caution-callout,
+  .control-row,
+  .flip-summary,
+  .flip-chart,
+  .chart-note,
+  .lab-controls,
+  .lab-kpis,
+  .chart-card,
+  .table-toolbar,
+  .data-table-wrap,
+  .data-footnote,
+  .case-tabs,
+  .case-panel,
+  .recovery-numbers,
+  .lesson-split,
+  .interpretation-banner,
+  .enterprise-scenarios,
+  .architecture-principles,
+  .eval-builder,
+  .decision-rule,
+  .limits-grid,
+  .do-not-claim,
+  .closing-grid,
+  .final-list,
+  .final-formula,
+  .glossary-search,
+  .glossary-grid,
+  .source-boundary,
+  .source-list,
+  .citation-box {
+    margin-left: 0;
+  }
+
+  .site-footer {
+    max-width: 860px;
+  }
+}
+
+@media (max-width: 760px) {
+  :root {
+    --header-h: 62px;
+    --radius: 18px;
+  }
+
+  body {
+    font-size: 16px;
+  }
+
+  .site-header {
+    padding: 0 15px;
+  }
+
+  .brand-text {
+    display: none;
+  }
+
+  .brand-mark {
+    width: 35px;
+    height: 35px;
+  }
+
+  .page-shell {
+    padding: 0 18px;
+  }
+
+  .hero {
+    padding: 62px 0 30px;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-copy {
+    padding-top: 0;
+  }
+
+  .hero h1 {
+    margin-top: 12px;
+    font-size: clamp(45px, 14vw, 67px);
+  }
+
+  .hero-lede {
+    font-size: 18px;
+  }
+
+  .hero-panel {
+    padding: 20px;
+  }
+
+  .personal-frame {
+    grid-template-columns: 1fr;
+    gap: 11px;
+    margin-top: 30px;
+  }
+
+  .personal-frame p {
+    font-size: 18px;
+  }
+
+  .section-heading {
+    grid-template-columns: 40px 1fr;
+    gap: 8px;
+    margin-bottom: 26px;
+  }
+
+  .section-heading h2 {
+    font-size: clamp(32px, 10vw, 43px);
+  }
+
+  .lead-paragraph {
+    font-size: 17px;
+  }
+
+  .question-switch {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .switch-arrow {
+    transform: rotate(90deg);
+  }
+
+  .question-card {
+    min-height: auto;
+  }
+
+  .summary-grid,
+  .definition-grid,
+  .drawer-grid,
+  .study-columns,
+  .winner-strip,
+  .trace-compare,
+  .lesson-split,
+  .source-boundary,
+  .closing-grid,
+  .glossary-grid,
+  .limits-grid,
+  .do-not-claim ul {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-card {
+    min-height: auto;
+  }
+
+  .analogy-map {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .agent-loop {
+    grid-template-columns: 1fr;
+    gap: 7px;
+    padding-bottom: 0;
+  }
+
+  .loop-link {
+    transform: rotate(90deg);
+  }
+
+  .loop-node {
+    min-height: auto;
+  }
+
+  .feedback-line {
+    display: none;
+  }
+
+  .drawer-grid div:nth-child(odd) {
+    border-right: 0;
+  }
+
+  .drawer-grid div:nth-last-child(-n + 2) {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .drawer-grid div:last-child {
+    border-bottom: 0;
+  }
+
+  .study-equation {
+    padding-bottom: 12px;
+  }
+
+  .equation-part {
+    flex-basis: 98px;
+  }
+
+  .method-table-wrap,
+  .data-table-wrap {
+    border-radius: 14px;
+  }
+
+  .caution-callout,
+  .interpretation-banner {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .finding-block {
+    grid-template-columns: 40px 1fr;
+  }
+
+  .finding-body h3 {
+    font-size: 25px;
+  }
+
+  .winner-strip span:last-child {
+    grid-column: auto;
+  }
+
+  .flip-row {
+    grid-template-columns: 82px 1fr 54px;
+    gap: 9px;
+  }
+
+  .flip-bar-line {
+    grid-template-columns: 62px 1fr;
+  }
+
+  .lab-kpis,
+  .recovery-numbers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chart-card-head {
+    flex-direction: column;
+  }
+
+  .chart-legend {
+    justify-content: flex-start;
+  }
+
+  .case-intro {
+    grid-template-columns: 1fr;
+  }
+
+  .enterprise-scenarios article {
+    display: block;
+  }
+
+  .enterprise-scenarios h3 {
+    margin-top: 16px;
+  }
+
+  .enterprise-scenarios ul {
+    margin-top: 17px;
+  }
+
+  .principle-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .principle-grid div {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  .builder-head {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .decision-rule blockquote {
+    font-size: 21px;
+  }
+
+  .source-list article {
+    display: block;
+  }
+
+  .source-list h3,
+  .source-list p,
+  .source-list a {
+    display: block;
+    margin-top: 9px;
+  }
+
+  .site-footer {
+    flex-direction: column;
+    align-items: start;
+    margin-top: 70px;
+    padding: 28px 18px 38px;
+  }
+}
+
+@media (max-width: 480px) {
+  .icon-button:first-child {
+    display: none;
+  }
+
+  .hero-actions .button {
+    width: 100%;
+  }
+
+  .metric-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .analogy-map {
+    grid-template-columns: 1fr;
+  }
+
+  .segmented-control {
+    width: 100%;
+    border-radius: 14px;
+  }
+
+  .segmented-control button {
+    flex: 1 1 auto;
+  }
+
+  .control-row,
+  .lab-controls,
+  .builder-controls,
+  .table-toolbar {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .control-row label,
+  .lab-controls label,
+  .builder-controls label,
+  .table-toolbar label,
+  .control-row select,
+  .lab-controls select,
+  .builder-controls select,
+  .table-toolbar select,
+  .table-toolbar input {
+    width: 100%;
+  }
+
+  .table-toolbar .table-count {
+    margin-left: 0;
+  }
+
+  .lab-kpis,
+  .recovery-numbers {
+    grid-template-columns: 1fr;
+  }
+
+  .case-tabs {
+    display: grid;
+  }
+
+  .case-tabs button {
+    width: 100%;
+    border-radius: 12px;
+    text-align: left;
+  }
+
+  .final-formula {
+    padding: 25px 19px;
+  }
+
+  .final-formula strong {
+    font-size: 21px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@media print {
+  :root {
+    --bg: #fff;
+    --surface: #fff;
+    --surface-2: #f4f1ec;
+    --ink: #111;
+    --ink-soft: #333;
+    --ink-faint: #555;
+    --line: #ccc;
+    --accent: #4b5540;
+    --accent-strong: #30382a;
+    --warm: #7d3e28;
+  }
+
+  body {
+    background: #fff;
+    font-size: 11pt;
+  }
+
+  .site-header,
+  .side-rail,
+  .reading-progress,
+  .hero-actions,
+  .mobile-nav,
+  .eval-builder,
+  .chart-tooltip,
+  .site-footer a,
+  .small-button,
+  .case-tabs,
+  .control-row,
+  .lab-controls,
+  .table-toolbar,
+  .glossary-search,
+  .citation-box button {
+    display: none !important;
+  }
+
+  .page-shell {
+    display: block;
+    width: auto;
+    padding: 0;
+  }
+
+  main {
+    max-width: none;
+  }
+
+  .hero,
+  .content-section {
+    padding-top: 28px;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1.25fr 0.75fr;
+  }
+
+  .hero h1 {
+    font-size: 46pt;
+  }
+
+  .content-section,
+  .summary-card,
+  .study-card,
+  .finding-block,
+  .case-panel,
+  .enterprise-scenarios article,
+  .limits-grid article {
+    break-inside: avoid;
+  }
+
+  .chart-card,
+  .data-table-wrap {
+    max-height: none;
+    overflow: visible;
+  }
+
+  #scatter-chart {
+    min-width: 0;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    color: #555;
+    font-size: 8pt;
+  }
+}
+
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to the article</a>
+  <div class="reading-progress" aria-hidden="true"><span id="reading-progress-bar"></span></div>
+
+  <header class="site-header" id="site-header">
+    <a class="brand" href="#top" aria-label="Go to the beginning">
+      <span class="brand-mark" aria-hidden="true">M/H</span>
+      <span class="brand-text">Model-Harness Fit</span>
+    </a>
+    <nav class="top-nav" aria-label="Primary navigation">
+      <a href="#mental-model">Mental model</a>
+      <a href="#findings">Findings</a>
+      <a href="#data-lab">Data lab</a>
+      <a href="#enterprise">My application</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-button" id="print-button" type="button" aria-label="Print or save as PDF" title="Print or save as PDF">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg>
+      </button>
+      <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch theme">
+        <svg class="theme-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="theme-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="menu-button" id="menu-button" type="button" aria-expanded="false" aria-controls="mobile-nav">
+        <span></span><span></span><span></span><span class="sr-only">Open navigation</span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation" hidden>
+    <a href="#one-minute">Six-minute version</a>
+    <a href="#mental-model">Mental model</a>
+    <a href="#study">Study design</a>
+    <a href="#findings">Findings</a>
+    <a href="#ranking-flip">Ranking flip</a>
+    <a href="#data-lab">Data lab</a>
+    <a href="#case-studies">Case studies</a>
+    <a href="#enterprise">My application</a>
+    <a href="#limits">Limits</a>
+    <a href="#glossary">Glossary</a>
+  </nav>
+
+  <div class="page-shell">
+    <aside class="side-rail" aria-label="Article contents">
+      <p class="side-label">On this page</p>
+      <nav class="toc" id="toc">
+        <a href="#one-minute">The paper in six minutes</a>
+        <a href="#mental-model">A model is not an agent</a>
+        <a href="#study">What the study tested</a>
+        <a href="#findings">What the results say</a>
+        <a href="#ranking-flip">Watch rankings reverse</a>
+        <a href="#data-lab">Explore all 66 configurations</a>
+        <a href="#case-studies">Why the fit changes</a>
+        <a href="#enterprise">How I would apply it</a>
+        <a href="#limits">What it does not prove</a>
+        <a href="#closing">My final position</a>
+        <a href="#glossary">Glossary</a>
+        <a href="#sources">Sources</a>
+      </nav>
+      <div class="side-note">
+        <span class="eyebrow">Scope</span>
+        <p>This is my explanation and interpretation of the paper. I did not reproduce the experiments.</p>
+      </div>
+    </aside>
+
+    <main id="main-content">
+      <section class="hero" id="top">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="kicker">Paper reading notes · Agent engineering · October 2026</p>
+            <h1>The best model is <em>not</em> enough.</h1>
+            <p class="hero-lede">I started with a common question: <strong>Which model is best for agents?</strong> This paper shows why that question is incomplete. The result depends on the model, the harness around it, and the task they face together.</p>
+            <div class="hero-actions">
+              <a class="button primary" href="#one-minute">Read the six-minute version</a>
+              <a class="button secondary" href="#data-lab">Open the data lab</a>
+            </div>
+            <p class="source-line">Based on <a href="https://arxiv.org/abs/2610.00917" target="_blank" rel="noreferrer">Finding the Right Fit: Model-Harness Interactions across Agent Tasks</a> by Li et al. (2026), version 1.</p>
+          </div>
+          <div class="hero-panel" aria-label="Paper study summary">
+            <div class="hero-panel-top">
+              <span class="status-dot" aria-hidden="true"></span>
+              <span>What was evaluated</span>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><strong>66</strong><span>configurations</span></div>
+              <div class="metric"><strong>5</strong><span>models</span></div>
+              <div class="metric"><strong>6</strong><span>harnesses</span></div>
+              <div class="metric"><strong>3</strong><span>benchmarks</span></div>
+              <div class="metric wide"><strong>6,204</strong><span>scored trajectories released</span></div>
+            </div>
+            <div class="panel-conclusion">
+              <span>The unit that matters</span>
+              <strong>Model × Harness × Task</strong>
+            </div>
+          </div>
+        </div>
+        <div class="personal-frame">
+          <span class="frame-label">Why this paper mattered to me</span>
+          <p>I have spent enough years in BI to know that a report is not trustworthy just because the visual looks good. Source quality, semantic grain, refresh logic, security and validation decide whether the number can be trusted. I had not been applying the same discipline to agents. I was still giving too much weight to the model name. This paper corrected that.</p>
+        </div>
+      </section>
+
+      <section class="content-section first" id="one-minute" data-section="The paper in six minutes">
+        <div class="section-heading">
+          <p class="section-number">01</p>
+          <div>
+            <p class="eyebrow">The paper in six minutes</p>
+            <h2>I changed the question before looking at the answer.</h2>
+          </div>
+        </div>
+
+        <div class="question-switch" aria-label="Old and improved agent evaluation questions">
+          <div class="question-card muted">
+            <span>Question I would have asked earlier</span>
+            <strong>Which model has the highest agent benchmark score?</strong>
+          </div>
+          <div class="switch-arrow" aria-hidden="true">→</div>
+          <div class="question-card emphasized">
+            <span>Question I would ask now</span>
+            <strong>Which model-harness configuration works best on my task, at my cost and risk level?</strong>
+          </div>
+        </div>
+
+        <div class="summary-grid">
+          <article class="summary-card">
+            <span class="summary-index">1</span>
+            <h3>Model rankings can reverse</h3>
+            <p>On Terminal-Bench 4, Claude beat GPT inside OpenHands. Inside PI, GPT beat Claude by a much larger margin. The model order was not stable.</p>
+          </article>
+          <article class="summary-card">
+            <span class="summary-index">2</span>
+            <h3>The best harness depends on the task</h3>
+            <p>For four of the five models, the winning harness changed when the benchmark changed. A working pair is not automatically portable.</p>
+          </article>
+          <article class="summary-card">
+            <span class="summary-index">3</span>
+            <h3>The vendor's own harness is not automatically best</h3>
+            <p>Claude Code led Claude on two benchmarks but lost to OpenHands on Terminal-Bench 4. Codex never produced GPT's highest score in this study.</p>
+          </article>
+          <article class="summary-card">
+            <span class="summary-index">4</span>
+            <h3>More spend does not guarantee more capability</h3>
+            <p>The same model could cost several times more in another harness while scoring lower. Cost belongs inside the evaluation, not after it.</p>
+          </article>
+          <article class="summary-card">
+            <span class="summary-index">5</span>
+            <h3>Error feedback changes recovery</h3>
+            <p>Models initiated almost all repairs. The decisive difference was often whether the harness returned a timeout, argument error or failure in a usable form.</p>
+          </article>
+          <article class="summary-card">
+            <span class="summary-index">6</span>
+            <h3>Self-verification can be confidently wrong</h3>
+            <p>An agent saying “verified” is not independent evidence. It may be testing against a criterion it invented, changed or misunderstood.</p>
+          </article>
+        </div>
+
+        <div class="plain-language-box">
+          <div class="plain-icon" aria-hidden="true">A</div>
+          <div>
+            <h3>One-sentence explanation</h3>
+            <p>A capable brain can still fail when the surrounding system gives it unclear tools, hides failures, lets commands hang, forgets progress or accepts weak proof of completion.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section" id="mental-model" data-section="A model is not an agent">
+        <div class="section-heading">
+          <p class="section-number">02</p>
+          <div>
+            <p class="eyebrow">A model is not an agent</p>
+            <h2>The harness is the operating system around the model.</h2>
+          </div>
+        </div>
+
+        <p class="lead-paragraph">The paper uses <strong>harness</strong> for everything that turns a language model into an acting system: tool definitions, context handling, retries, timeouts, permissions, continuation rules and stopping rules. The model reasons. The harness decides how that reasoning touches the world.</p>
+
+        <div class="analogy-switcher">
+          <div class="segmented-control" role="tablist" aria-label="Choose an analogy">
+            <button type="button" role="tab" aria-selected="true" data-analogy="driving">Driving test</button>
+            <button type="button" role="tab" aria-selected="false" data-analogy="bi">BI system</button>
+            <button type="button" role="tab" aria-selected="false" data-analogy="school">School lab</button>
+          </div>
+          <div class="analogy-panel" id="analogy-panel" aria-live="polite"></div>
+        </div>
+
+        <div class="agent-loop" aria-label="Simplified model-harness-agent loop">
+          <div class="loop-node task-node"><span>1</span><strong>Task</strong><small>What must be done</small></div>
+          <div class="loop-link" aria-hidden="true">→</div>
+          <div class="loop-node model-node"><span>2</span><strong>Model</strong><small>Reasons and chooses an action</small></div>
+          <div class="loop-link" aria-hidden="true">→</div>
+          <div class="loop-node harness-node"><span>3</span><strong>Harness</strong><small>Validates and executes the call</small></div>
+          <div class="loop-link" aria-hidden="true">→</div>
+          <div class="loop-node tool-node"><span>4</span><strong>Tool / environment</strong><small>Returns output or failure</small></div>
+          <div class="feedback-line"><span>Feedback returns through the harness</span></div>
+        </div>
+
+        <div class="definition-grid">
+          <article><h3>Model</h3><p>The language model producing reasoning, text and tool calls. In this study: Claude Opus 5, GPT-6 Astra, GLM-5.3, Kimi K3 and DeepSeek V4 Pro.</p></article>
+          <article><h3>Harness</h3><p>The runtime system around the model. It exposes tools, maintains context, handles errors, decides retries and determines when work stops.</p></article>
+          <article><h3>Task</h3><p>The actual job and environment. A harness that helps on one class of work can hurt on another.</p></article>
+          <article><h3>Evaluator</h3><p>The external judge that scores the final result. It must not be confused with the agent's own self-check.</p></article>
+        </div>
+
+        <details class="evidence-drawer">
+          <summary>What exactly can a harness control?</summary>
+          <div class="drawer-grid">
+            <div><strong>Tool interface</strong><span>Names, schemas, required arguments and error messages</span></div>
+            <div><strong>Context</strong><span>What is kept, compressed, cached or removed</span></div>
+            <div><strong>Execution</strong><span>Timeouts, sandboxing, permissions and shell behavior</span></div>
+            <div><strong>Continuation</strong><span>Whether interrupted work resumes and with what prompt</span></div>
+            <div><strong>Stopping</strong><span>Turn limits, stuck detection and completion markers</span></div>
+            <div><strong>Verification support</strong><span>Checks, acceptance criteria and evidence shown to the model</span></div>
+          </div>
+        </details>
+      </section>
+
+      <section class="content-section" id="study" data-section="What the study tested">
+        <div class="section-heading">
+          <p class="section-number">03</p>
+          <div>
+            <p class="eyebrow">What the researchers tested</p>
+            <h2>A cross-product, not a single leaderboard.</h2>
+          </div>
+        </div>
+
+        <div class="study-equation" aria-label="How the 66 configurations were formed">
+          <div class="equation-part"><strong>4</strong><span>configurable harnesses</span></div>
+          <span class="operator">×</span>
+          <div class="equation-part"><strong>5</strong><span>models</span></div>
+          <span class="operator">×</span>
+          <div class="equation-part"><strong>3</strong><span>benchmarks</span></div>
+          <span class="operator">=</span>
+          <div class="equation-part result"><strong>60</strong><span>configurations</span></div>
+          <span class="operator">+</span>
+          <div class="equation-part"><strong>6</strong><span>native references</span></div>
+          <span class="operator">=</span>
+          <div class="equation-part total"><strong>66</strong><span>reported configurations</span></div>
+        </div>
+
+        <div class="study-columns">
+          <article class="study-card">
+            <span class="eyebrow">Configurable harnesses</span>
+            <ul class="clean-list">
+              <li><strong>OpenHands</strong><span>Configurable coding-agent platform</span></li>
+              <li><strong>DeepSeek Harness (DSH)</strong><span>Packaged coding harness</span></li>
+              <li><strong>PI</strong><span>Lean coding-agent scaffold</span></li>
+              <li><strong>openJiuwen</strong><span>Framework assembled into a coding agent</span></li>
+            </ul>
+          </article>
+          <article class="study-card">
+            <span class="eyebrow">Native references</span>
+            <ul class="clean-list">
+              <li><strong>Claude Code + Claude</strong><span>Vendor-native pairing</span></li>
+              <li><strong>Codex + GPT</strong><span>Vendor-native pairing</span></li>
+            </ul>
+            <p class="mini-note">These are references, not fully cross-paired harnesses. Claude Code was only run with Claude; Codex only with GPT.</p>
+          </article>
+          <article class="study-card">
+            <span class="eyebrow">Task collections</span>
+            <ul class="clean-list">
+              <li><strong>TUA-Bench · 120 tasks</strong><span>General terminal use</span></li>
+              <li><strong>ALE-CLI · 99 tasks</strong><span>Professional workflows</span></li>
+              <li><strong>Terminal-Bench 4 · 63 tasks</strong><span>Hard command-line work</span></li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="method-table-wrap">
+          <table class="method-table">
+            <caption>Important choices in the experimental setup</caption>
+            <thead><tr><th>Decision</th><th>What the paper did</th><th>Why I care</th></tr></thead>
+            <tbody>
+              <tr><td>Provider routing</td><td>Models were served through OpenRouter, pinned to first-party providers, with fallback disabled.</td><td>It reduces one source of routing variability.</td></tr>
+              <tr><td>Reasoning setting</td><td>Every harness requested high reasoning effort.</td><td>The label may still map to different internal budgets across providers.</td></tr>
+              <tr><td>Harness behavior</td><td>Context management, compaction, retries and turn limits mostly stayed at each harness's defaults.</td><td>This tests real configurations, but does not isolate one harness feature causally.</td></tr>
+              <tr><td>Extra capability</td><td>No custom skills, MCP servers, persistent memory or custom prompts were added.</td><td>The comparison is cleaner, but not the same as a tuned enterprise deployment.</td></tr>
+              <tr><td>Scoring</td><td>TUA and ALE retained partial credit; Terminal-Bench 4 was binary. Scores were not combined into one grand score.</td><td>The benchmarks measure different workloads and should stay separate.</td></tr>
+              <tr><td>Cost</td><td>Model API cost was calculated at OpenRouter prices, including auxiliary model calls made by the harness.</td><td>Harness overhead becomes visible instead of being hidden behind model price.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="caution-callout">
+          <strong>Important:</strong>
+          <p>This is not a controlled laboratory experiment where every timeout, tool, context window and turn limit is identical. The paper compares complete working configurations. That is useful for deployment decisions, but weaker for claiming that one isolated harness feature caused a score difference.</p>
+        </div>
+      </section>
+
+      <section class="content-section" id="findings" data-section="What the results say">
+        <div class="section-heading">
+          <p class="section-number">04</p>
+          <div>
+            <p class="eyebrow">What the results say</p>
+            <h2>Six findings I would carry into an agent architecture review.</h2>
+          </div>
+        </div>
+
+        <article class="finding-block">
+          <div class="finding-number">01</div>
+          <div class="finding-body">
+            <p class="eyebrow">Ranking instability</p>
+            <h3>The same two models can swap places when only the harness changes.</h3>
+            <p>On Terminal-Bench 4, Claude scored <strong>57.14%</strong> in OpenHands while GPT scored <strong>49.21%</strong>. Claude led by 7.94 points. In PI, Claude scored <strong>30.16%</strong> and GPT scored <strong>60.32%</strong>. GPT led by 30.16 points.</p>
+            <div class="finding-conclusion">The observed Claude-versus-GPT gap moved by <strong>38.09 percentage points</strong> between those two harnesses.</div>
+            <details><summary>What I take from this</summary><p>A model leaderboard cannot tell me how that model will rank inside my runtime. Replacing a model in an existing agent is a system change, not a drop-in API change.</p></details>
+          </div>
+        </article>
+
+        <article class="finding-block">
+          <div class="finding-number">02</div>
+          <div class="finding-body">
+            <p class="eyebrow">Task-dependent fit</p>
+            <h3>For four of five models, the winning harness changed across benchmarks.</h3>
+            <p>Claude, GPT, GLM and DeepSeek each had different observed winners as the task collection changed. Kimi was the exception: openJiuwen produced its best score on all three benchmarks.</p>
+            <div class="winner-strip" aria-label="Best harness by model and benchmark">
+              <span><strong>Claude</strong> Claude Code → Claude Code → OpenHands</span>
+              <span><strong>GPT</strong> openJiuwen → PI → PI</span>
+              <span><strong>GLM</strong> openJiuwen → OpenHands → DSH</span>
+              <span><strong>Kimi</strong> openJiuwen → openJiuwen → openJiuwen</span>
+              <span><strong>DeepSeek</strong> openJiuwen → OpenHands → DSH</span>
+            </div>
+            <details><summary>What I take from this</summary><p>“Best harness” is not a property of the harness alone. It is an empirical result for a model and workload. I should evaluate on representative tasks, not generic demos.</p></details>
+          </div>
+        </article>
+
+        <article class="finding-block">
+          <div class="finding-number">03</div>
+          <div class="finding-body">
+            <p class="eyebrow">Native is not a guarantee</p>
+            <h3>The vendor's own agent can win, lose or sit in the middle.</h3>
+            <p>Claude Code was Claude's best harness on TUA-Bench and ALE-CLI, but OpenHands led it by 7.94 points on Terminal-Bench 4. For GPT, Codex was beaten by openJiuwen on TUA-Bench and by PI on ALE-CLI and Terminal-Bench 4.</p>
+            <details><summary>What I take from this</summary><p>Vendor alignment may improve integration, but I would not turn it into an architecture rule. Native provenance is evidence to test, not a decision shortcut.</p></details>
+          </div>
+        </article>
+
+        <article class="finding-block">
+          <div class="finding-number">04</div>
+          <div class="finding-body">
+            <p class="eyebrow">Cost-performance fit</p>
+            <h3>A more expensive run can be substantially worse.</h3>
+            <p>On Terminal-Bench 4, GPT with PI scored <strong>60.32%</strong> at about <strong>$4.66 per task</strong>. GPT with DSH scored <strong>52.38%</strong> at about <strong>$19.94 per task</strong>. The lower-scoring configuration cost more than four times as much.</p>
+            <details><summary>What I take from this</summary><p>Model price is not agent cost. Tool-loop length, uncached context, retries, compaction and auxiliary calls can dominate. I need score, latency and cost from the same evaluation run.</p></details>
+          </div>
+        </article>
+
+        <article class="finding-block">
+          <div class="finding-number">05</div>
+          <div class="finding-body">
+            <p class="eyebrow">Persistent fit can exist</p>
+            <h3>Kimi and openJiuwen were a stable favourable pair in this study.</h3>
+            <p>openJiuwen led Kimi's strongest alternative by <strong>5.61</strong>, <strong>6.91</strong> and <strong>11.11</strong> points across TUA-Bench, ALE-CLI and Terminal-Bench 4. The advantage remained after removing the three largest positive task gaps.</p>
+            <p>But the advantage was not uniform by domain. On ALE-CLI, openJiuwen led PI strongly in life sciences and business/finance, while trailing in computing/math.</p>
+            <details><summary>What I take from this</summary><p>A repeatable pairing is meaningful, but I should still inspect domain slices. An aggregate win can hide a local loss in the workload I actually care about.</p></details>
+          </div>
+        </article>
+
+        <article class="finding-block">
+          <div class="finding-number">06</div>
+          <div class="finding-body">
+            <p class="eyebrow">Process matters</p>
+            <h3>The harness changes calls, context reuse and the shape of failure.</h3>
+            <p>For the same model, harnesses produced large differences in model-call counts and uncached input tokens. openJiuwen served 94–99% of its input tokens from cache in the reported configurations, versus 49–77% for the others.</p>
+            <p>The paper also found that trajectory length alone did not identify efficiency or correctness. A longer path could be the one that fixed the real defect.</p>
+            <details><summary>What I take from this</summary><p>I should trace the whole execution: calls, tokens, cache, tool errors, retries, wall time, final evidence and stop reason. A single pass rate hides too much.</p></details>
+          </div>
+        </article>
+      </section>
+
+      <section class="content-section interactive-section" id="ranking-flip" data-section="Watch rankings reverse">
+        <div class="section-heading">
+          <p class="section-number">05</p>
+          <div>
+            <p class="eyebrow">Interactive comparison</p>
+            <h2>Watch a model ranking change when the harness changes.</h2>
+          </div>
+        </div>
+        <p class="lead-paragraph">Choose a benchmark and two models. The chart compares only harnesses available to both. A positive gap means Model A leads; a negative gap means Model B leads.</p>
+
+        <div class="control-row">
+          <label>Benchmark<select id="flip-benchmark"></select></label>
+          <label>Model A<select id="flip-model-a"></select></label>
+          <label>Model B<select id="flip-model-b"></select></label>
+        </div>
+        <div class="flip-summary" id="flip-summary" aria-live="polite"></div>
+        <div class="flip-chart" id="flip-chart" role="img" aria-label="Comparison of selected model scores by harness"></div>
+        <p class="chart-note">Scores come from Table 1 of the paper. Native harnesses appear only when both selected models share that harness; in practice, the native pairings here are one-to-one and therefore excluded from cross-model comparisons.</p>
+      </section>
+
+      <section class="content-section interactive-section" id="data-lab" data-section="Explore all 66 configurations">
+        <div class="section-heading">
+          <p class="section-number">06</p>
+          <div>
+            <p class="eyebrow">Interactive data lab</p>
+            <h2>Explore all 66 reported configurations.</h2>
+          </div>
+        </div>
+        <p class="lead-paragraph">The explorer combines the paper's score table with its cost table. Scores and per-task costs are kept separate by benchmark. Hover or focus on a point to see the configuration.</p>
+
+        <div class="lab-controls">
+          <label>Benchmark<select id="lab-benchmark"></select></label>
+          <label>Model<select id="lab-model"><option value="All">All models</option></select></label>
+          <label>Harness<select id="lab-harness"><option value="All">All harnesses</option></select></label>
+          <label class="checkbox-label"><input type="checkbox" id="lab-native" checked><span>Include native pairings</span></label>
+          <button class="small-button" id="reset-lab" type="button">Reset filters</button>
+        </div>
+
+        <div class="lab-kpis" id="lab-kpis" aria-live="polite"></div>
+
+        <div class="chart-card">
+          <div class="chart-card-head">
+            <div><h3>Score versus cost per task</h3><p>Upper-left is generally more attractive: higher score, lower cost.</p></div>
+            <div class="chart-legend" id="chart-legend"></div>
+          </div>
+          <div class="scatter-wrap" id="scatter-wrap">
+            <svg id="scatter-chart" viewBox="0 0 900 520" role="img" aria-labelledby="scatter-title scatter-desc">
+              <title id="scatter-title">Score versus cost by configuration</title>
+              <desc id="scatter-desc">Interactive scatter plot of model-harness configurations for the selected benchmark.</desc>
+            </svg>
+            <div class="chart-tooltip" id="chart-tooltip" role="status" aria-live="polite" hidden></div>
+          </div>
+        </div>
+
+        <div class="table-toolbar">
+          <label>Search table<input id="table-search" type="search" placeholder="Model or harness"></label>
+          <label>Sort by<select id="table-sort"><option value="score-desc">Score: high to low</option><option value="cost-asc">Cost: low to high</option><option value="efficiency-desc">Score per dollar: high to low</option><option value="model-asc">Model name</option></select></label>
+          <span id="table-count" class="table-count"></span>
+        </div>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <caption>Filtered model-harness configurations</caption>
+            <thead><tr><th>Model</th><th>Harness</th><th>Type</th><th>Score</th><th>Cost / task</th><th>Within-model result</th></tr></thead>
+            <tbody id="config-table-body"></tbody>
+          </table>
+        </div>
+        <p class="data-footnote">Cost values are computed from the paper's configuration totals divided by the fixed task counts: 120, 99 and 63. Rounded display values can differ slightly from calculations using unrounded records.</p>
+      </section>
+
+      <section class="content-section" id="case-studies" data-section="Why the fit changes">
+        <div class="section-heading">
+          <p class="section-number">07</p>
+          <div>
+            <p class="eyebrow">Why the fit changes</p>
+            <h2>The trajectories explain more than the leaderboard.</h2>
+          </div>
+        </div>
+        <p class="lead-paragraph">The paper inspected matched runs: the same model doing the same task under different harnesses. These examples show where runtime design changes the outcome.</p>
+
+        <div class="case-tabs" role="tablist" aria-label="Trajectory case studies">
+          <button type="button" role="tab" aria-selected="true" data-case="timeout">1. A hang becomes feedback</button>
+          <button type="button" role="tab" aria-selected="false" data-case="verification">2. “Verified” but wrong</button>
+          <button type="button" role="tab" aria-selected="false" data-case="continuation">3. Continue or escalate</button>
+        </div>
+        <div class="case-panel" id="case-panel" aria-live="polite"></div>
+
+        <div class="recovery-numbers">
+          <div><strong>192</strong><span>actionable failure-signal events coded in matched Terminal-Bench pairs</span></div>
+          <div><strong>180</strong><span>responses initiated by the model rather than the harness</span></div>
+          <div><strong>69%</strong><span>of responses were diagnosis or a targeted patch</span></div>
+          <div><strong>116 / 133</strong><span>diagnosis-or-patch responses resolved the signal</span></div>
+        </div>
+
+        <div class="lesson-split">
+          <div>
+            <p class="eyebrow">What the model usually supplied</p>
+            <h3>Diagnosis and repair</h3>
+            <p>Once a useful failure signal arrived, the model often identified the problem and corrected it. This suggests that many failures were not a simple lack of reasoning capability.</p>
+          </div>
+          <div>
+            <p class="eyebrow">What the harness had to supply</p>
+            <h3>A usable signal and a safe next step</h3>
+            <p>A timeout must return as a timeout. A malformed tool call must return a structured argument error. Interrupted work needs a continuation policy. Human-required steps need an escalation path.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section" id="enterprise" data-section="How I would apply it">
+        <div class="section-heading">
+          <p class="section-number">08</p>
+          <div>
+            <p class="eyebrow">My application of the paper</p>
+            <h2>I would evaluate the agent configuration, not approve the model in isolation.</h2>
+          </div>
+        </div>
+
+        <div class="interpretation-banner">
+          <strong>My interpretation, not a paper result</strong>
+          <p>The examples in this section apply the paper's logic to enterprise BI, data engineering and agent operations. They were not part of the published benchmarks.</p>
+        </div>
+
+        <div class="enterprise-scenarios">
+          <article>
+            <span class="scenario-tag">SQL / BI agent</span>
+            <h3>Same model, different trust boundary</h3>
+            <p>A model may generate the same SQL in two systems. One harness runs it with read-only credentials, row limits, query timeout, schema context and result checks. Another gives broad access and returns raw database errors. These are not the same agent.</p>
+            <ul>
+              <li>Test semantic correctness, grain and KPI definitions.</li>
+              <li>Return normalized SQL errors to the model.</li>
+              <li>Block writes by policy, not by prompt.</li>
+              <li>Validate the answer against known queries and edge cases.</li>
+            </ul>
+          </article>
+          <article>
+            <span class="scenario-tag">ADF / workflow agent</span>
+            <h3>Retry logic can create or prevent damage</h3>
+            <p>A “helpful” retry can duplicate a file load, resend a notification or rerun a non-idempotent step. The model is only one part of the failure behavior.</p>
+            <ul>
+              <li>Classify retryable and non-retryable errors.</li>
+              <li>Use idempotency keys and run-level state.</li>
+              <li>Set bounded retries, timeouts and stop reasons.</li>
+              <li>Escalate ambiguous production actions.</li>
+            </ul>
+          </article>
+          <article>
+            <span class="scenario-tag">Power BI change agent</span>
+            <h3>“The file saved” is not acceptance</h3>
+            <p>An agent can edit a measure and confirm that the model opens. That does not prove the KPI still reconciles, RLS still works, refresh succeeds or dependent reports are unaffected.</p>
+            <ul>
+              <li>Define independent acceptance tests before the run.</li>
+              <li>Compare totals, slices, lineage and performance.</li>
+              <li>Preserve a rollback artifact.</li>
+              <li>Require evidence, not a confident completion message.</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="architecture-principles">
+          <h3>Runtime controls I would expect in a production harness</h3>
+          <div class="principle-grid">
+            <div><strong>Typed tool schemas</strong><span>Required arguments, allowed values and clear validation errors</span></div>
+            <div><strong>Bounded execution</strong><span>Timeouts, retries, budgets and circuit breakers</span></div>
+            <div><strong>Structured feedback</strong><span>Errors returned in a form the model can act on</span></div>
+            <div><strong>Independent verification</strong><span>Tests defined outside the agent's own reasoning loop</span></div>
+            <div><strong>Explicit stop states</strong><span>Completed, failed, blocked, timed out, needs-human</span></div>
+            <div><strong>Audit evidence</strong><span>Tool calls, changes, costs, latency, approvals and final checks</span></div>
+            <div><strong>Least privilege</strong><span>Read/write boundaries enforced by identity and environment</span></div>
+            <div><strong>Rollback</strong><span>Versioned artifacts and a tested path back</span></div>
+          </div>
+        </div>
+
+        <div class="eval-builder" id="eval-builder">
+          <div class="builder-head">
+            <div>
+              <p class="eyebrow">Build a small evaluation plan</p>
+              <h3>Turn the paper into an engineering decision.</h3>
+            </div>
+            <span>Runs locally in the browser</span>
+          </div>
+          <div class="builder-controls">
+            <label>Workload<select id="plan-workload"><option value="sql">SQL and BI questions</option><option value="code">Code changes</option><option value="workflow">Workflow automation</option><option value="terminal">Terminal / operations</option></select></label>
+            <label>Risk level<select id="plan-risk"><option value="medium">Medium</option><option value="high">High</option><option value="low">Low</option></select></label>
+            <label>Candidate models<select id="plan-models"><option value="2">2 models</option><option value="3">3 models</option><option value="4">4 models</option></select></label>
+            <label>Candidate harnesses<select id="plan-harnesses"><option value="2">2 harnesses</option><option value="3">3 harnesses</option><option value="4">4 harnesses</option></select></label>
+          </div>
+          <div class="plan-output" id="plan-output" aria-live="polite"></div>
+          <button class="button secondary compact" id="copy-plan" type="button">Copy the plan</button>
+          <span class="copy-status" id="copy-status" role="status"></span>
+        </div>
+
+        <div class="decision-rule">
+          <p class="eyebrow">My decision rule</p>
+          <blockquote>I would not promote the configuration with the highest average score. I would promote the configuration that meets the minimum quality and safety gates, then gives the best cost-latency trade-off on representative work.</blockquote>
+        </div>
+      </section>
+
+      <section class="content-section" id="limits" data-section="What it does not prove">
+        <div class="section-heading">
+          <p class="section-number">09</p>
+          <div>
+            <p class="eyebrow">What the paper does not prove</p>
+            <h2>Useful result, limited claim.</h2>
+          </div>
+        </div>
+
+        <div class="limits-grid">
+          <article><strong>One counted run per task</strong><p>The study did not estimate run-to-run variance. A different run could change a close comparison.</p></article>
+          <article><strong>Defaults were not uniform</strong><p>Tools, context management, turn limits and execution budgets varied by harness. The results compare configurations, not isolated components.</p></article>
+          <article><strong>Three fixed task collections</strong><p>The findings are strong evidence for these settings, not proof that the same ranking holds for every enterprise workload.</p></article>
+          <article><strong>Matched case studies were selective</strong><p>The trajectory analysis gives mechanisms and examples, but it is not a complete causal decomposition of all 6,204 runs.</p></article>
+          <article><strong>Proposed fixes were not tested here</strong><p>The training-data and harness-design recommendations are evidence-grounded proposals, not validated interventions in this paper.</p></article>
+          <article><strong>No tuned enterprise stack</strong><p>The study intentionally did not add custom skills, memory, MCP servers or task-specific prompts. A production system may behave differently.</p></article>
+        </div>
+
+        <div class="do-not-claim">
+          <h3>Claims I would not make after reading this</h3>
+          <ul>
+            <li>“openJiuwen is the best harness.”</li>
+            <li>“Kimi is better than the other models.”</li>
+            <li>“Vendor-native agents are poor.”</li>
+            <li>“More context or more turns always improves results.”</li>
+            <li>“The harness caused every observed score difference.”</li>
+          </ul>
+          <p>The defensible claim is narrower: <strong>the observed value of a model or harness depends materially on the configuration and task, so they should be evaluated together.</strong></p>
+        </div>
+      </section>
+
+      <section class="content-section closing-section" id="closing" data-section="My final position">
+        <div class="section-heading">
+          <p class="section-number">10</p>
+          <div>
+            <p class="eyebrow">My final position</p>
+            <h2>The model is a component. The agent is the governed system.</h2>
+          </div>
+        </div>
+
+        <div class="closing-grid">
+          <div class="closing-statement">
+            <span>Before this paper</span>
+            <p>I treated harness choice mainly as an implementation preference around the model.</p>
+          </div>
+          <div class="closing-statement strong">
+            <span>After this paper</span>
+            <p>I treat model-harness fit as an evaluated architecture decision with its own quality, cost, security and operational evidence.</p>
+          </div>
+        </div>
+
+        <ol class="final-list">
+          <li><span>01</span><p>Benchmark the complete configuration on representative tasks.</p></li>
+          <li><span>02</span><p>Keep quality, cost, latency and safety in the same scorecard.</p></li>
+          <li><span>03</span><p>Trace failures far enough to distinguish model limits from runtime limits.</p></li>
+          <li><span>04</span><p>Return tool and execution failures as structured feedback.</p></li>
+          <li><span>05</span><p>Use bounded timeouts and explicit stop states.</p></li>
+          <li><span>06</span><p>Do not accept the agent's own test as independent proof.</p></li>
+          <li><span>07</span><p>Define acceptance criteria before execution where possible.</p></li>
+          <li><span>08</span><p>Keep a human escalation path for genuinely human-only steps.</p></li>
+          <li><span>09</span><p>Re-evaluate when the model, harness, tools or workload changes.</p></li>
+          <li><span>10</span><p>Prefer evidence over model reputation or vendor convenience.</p></li>
+        </ol>
+
+        <div class="final-formula">
+          <span>Deployment confidence</span>
+          <strong>Representative tasks × external verification × runtime controls × observed cost</strong>
+          <small>Not model name alone.</small>
+        </div>
+      </section>
+
+      <section class="content-section" id="glossary" data-section="Glossary">
+        <div class="section-heading">
+          <p class="section-number">11</p>
+          <div>
+            <p class="eyebrow">Beginner-friendly glossary</p>
+            <h2>Terms used in the paper and this note.</h2>
+          </div>
+        </div>
+        <label class="glossary-search">Find a term<input type="search" id="glossary-search" placeholder="Example: trajectory, Pareto, verifier"></label>
+        <div class="glossary-grid" id="glossary-grid"></div>
+      </section>
+
+      <section class="content-section sources-section" id="sources" data-section="Sources">
+        <div class="section-heading">
+          <p class="section-number">12</p>
+          <div>
+            <p class="eyebrow">Sources and evidence boundary</p>
+            <h2>What came from the paper, and what came from me.</h2>
+          </div>
+        </div>
+
+        <div class="source-boundary">
+          <div><strong>Paper-derived</strong><p>Study design, scores, cost values, task counts, trajectory counts, observed failure patterns, case studies, limitations and author proposals.</p></div>
+          <div><strong>My interpretation</strong><p>BI analogies, enterprise scenarios, runtime-control checklist, evaluation-plan builder and final architecture position.</p></div>
+        </div>
+
+        <div class="source-list">
+          <article>
+            <span>Primary paper</span>
+            <h3>Finding the Right Fit: Model-Harness Interactions across Agent Tasks</h3>
+            <p>Yixuan Li, Yiyun Zhou, Yao Long Teng, Fuchao Yang, Yanchen Deng, Zhiyi Lyu, Xuyu Dong, Feng Chen and Bo An. arXiv:2610.00917, 2026.</p>
+            <a href="https://arxiv.org/abs/2610.00917" target="_blank" rel="noreferrer">Open the paper</a>
+          </article>
+          <article>
+            <span>Official code</span>
+            <h3>Harness × model evaluation suite</h3>
+            <p>Adapters, configurations, evaluation scripts and figure-generation code released by the authors.</p>
+            <a href="https://github.com/liyix/finding-the-right-fit" target="_blank" rel="noreferrer">Open the official repository</a>
+          </article>
+          <article>
+            <span>Official dataset</span>
+            <h3>6,204 scored trajectories</h3>
+            <p>Per-task results and normalized trajectories released under separate dataset terms. The authors state that the data should not be used to train, fine-tune or distill models.</p>
+            <a href="https://huggingface.co/datasets/yixuanli97/finding-the-right-fit" target="_blank" rel="noreferrer">Open the dataset</a>
+          </article>
+        </div>
+
+        <div class="citation-box">
+          <button type="button" class="small-button" id="copy-citation">Copy BibTeX</button>
+          <pre id="bibtex">@article{li2026rightfit,
+  title   = {Finding the Right Fit: Model--Harness Interactions across Agent Tasks},
+  author  = {Li, Yixuan and Zhou, Yiyun and Teng, Yao Long and Yang, Fuchao and Deng, Yanchen and Lyu, Zhiyi and Dong, Xuyu and Chen, Feng and An, Bo},
+  journal = {arXiv preprint arXiv:2610.00917},
+  year    = {2026},
+  url     = {https://arxiv.org/abs/2610.00917}
+}</pre>
+          <span class="copy-status" id="citation-status" role="status"></span>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div>
+      <strong>The Best Model Is Not Enough</strong>
+      <p>Personal reading notes by Om · Built as a static, dependency-free GitHub Pages site.</p>
+    </div>
+    <a href="#top">Back to top ↑</a>
+  </footer>
+
+  <noscript><div class="noscript">This page needs JavaScript for the interactive charts and filters. The written explanation remains readable without them.</div></noscript>
+  <script>
+window.CONFIG_DATA = [{"benchmark":"TUA-Bench","tasks":120,"model":"Claude Opus 5","harness":"OpenHands","type":"configurable","score":65.23,"cost":0.7217,"best":false},{"benchmark":"TUA-Bench","tasks":120,"model":"Claude Opus 5","harness":"DSH","type":"configurable","score":58.84,"cost":0.7645,"best":false},{"benchmark":"TUA-Bench","tasks":120,"model":"Claude Opus 5","harness":"PI","type":"configurable","score":58.21,"cost":0.5857,"best":false},{"benchmark":"TUA-Bench","tasks":120,"model":"Claude Opus 5","harness":"openJiuwen","type":"configurable","score":65.39,"cost":1.3537,"best":false},{"benchmark":"TUA-Bench","tasks":120,"model":"Claude Opus 5","harness":"Claude Code","type":"native","score":68.89,"cost":0.9477,"best":true},{"benchmark":"TUA-Bench","tasks":120,"model":"GPT-6 Astra","harness":"OpenHands","type":"configurable","score":61.01,"cost":0.7169,"best":false},{"benchmark":"TUA-Bench","tasks":120,"model":"GPT-6 Astra","harness":"DSH","type":"configurable","score":64.32,"cost":1.2581,"best":false},{"benchmark":"TUA-Bench","tasks":120,"model":"GPT-6 Astra","harness":"PI","type":"configurable","score":65.38,"cost":0.641,"best":false},{"benchmark":"TUA-Bench","tasks":120,"model":"GPT-6 Astra","harness":"openJiuwen","type":"configurable","score":66.35,"cost":1.3135,"best":true},{"benchmark":"TUA-Bench","tasks":120,"model":"GPT-6 Astra","harness":"Codex","type":"native","score":63.68,"cost":0.9423,"best":false},{"benchmark":"TUA-Bench","tasks":120,"model":"GLM-5.3","harness":"OpenHands","type":"configurable","score":62.86,"cost":0.4322,"best":false},{"benchmark":"TUA-Bench","tasks":120,"model":"GLM-5.3","harness":"DSH","type":"configurable","score":56.16,"cost":0.4706,"best":false},{"benchmark":"TUA-Bench","tasks":120,"model":"GLM-5.3","harness":"PI","type":"configurable","score":53.57,"cost":0.2485,"best":false},{"benchmark":"TUA-Bench","tasks":120,"model":"GLM-5.3","harness":"openJiuwen","type":"configurable","score":63.01,"cost":0.3762,"best":true},{"benchmark":"TUA-Bench","tasks":120,"model":"Kimi K3","harness":"OpenHands","type":"configurable","score":50.54,"cost":0.3904,"best":false},{"benchmark":"TUA-Bench","tasks":120,"model":"Kimi K3","harness":"DSH","type":"configurable","score":58.38,"cost":0.3986,"best":false},{"benchmark":"TUA-Bench","tasks":120,"model":"Kimi K3","harness":"PI","type":"configurable","score":58.78,"cost":0.2792,"best":false},{"benchmark":"TUA-Bench","tasks":120,"model":"Kimi K3","harness":"openJiuwen","type":"configurable","score":64.39,"cost":0.4723,"best":true},{"benchmark":"TUA-Bench","tasks":120,"model":"DeepSeek V4 Pro","harness":"OpenHands","type":"configurable","score":56.49,"cost":0.121,"best":false},{"benchmark":"TUA-Bench","tasks":120,"model":"DeepSeek V4 Pro","harness":"DSH","type":"configurable","score":51.93,"cost":0.1067,"best":false},{"benchmark":"TUA-Bench","tasks":120,"model":"DeepSeek V4 Pro","harness":"PI","type":"configurable","score":57.58,"cost":0.1006,"best":false},{"benchmark":"TUA-Bench","tasks":120,"model":"DeepSeek V4 Pro","harness":"openJiuwen","type":"configurable","score":62.59,"cost":0.3628,"best":true},{"benchmark":"ALE-CLI","tasks":99,"model":"Claude Opus 5","harness":"OpenHands","type":"configurable","score":53.14,"cost":5.0329,"best":false},{"benchmark":"ALE-CLI","tasks":99,"model":"Claude Opus 5","harness":"DSH","type":"configurable","score":43.48,"cost":3.5576,"best":false},{"benchmark":"ALE-CLI","tasks":99,"model":"Claude Opus 5","harness":"PI","type":"configurable","score":50.22,"cost":3.2661,"best":false},{"benchmark":"ALE-CLI","tasks":99,"model":"Claude Opus 5","harness":"openJiuwen","type":"configurable","score":51.27,"cost":4.8934,"best":false},{"benchmark":"ALE-CLI","tasks":99,"model":"Claude Opus 5","harness":"Claude Code","type":"native","score":54.28,"cost":5.7597,"best":true},{"benchmark":"ALE-CLI","tasks":99,"model":"GPT-6 Astra","harness":"OpenHands","type":"configurable","score":53.86,"cost":2.7829,"best":false},{"benchmark":"ALE-CLI","tasks":99,"model":"GPT-6 Astra","harness":"DSH","type":"configurable","score":49.02,"cost":6.7928,"best":false},{"benchmark":"ALE-CLI","tasks":99,"model":"GPT-6 Astra","harness":"PI","type":"configurable","score":58.46,"cost":2.6967,"best":true},{"benchmark":"ALE-CLI","tasks":99,"model":"GPT-6 Astra","harness":"openJiuwen","type":"configurable","score":56.71,"cost":5.1909,"best":false},{"benchmark":"ALE-CLI","tasks":99,"model":"GPT-6 Astra","harness":"Codex","type":"native","score":56.3,"cost":4.8675,"best":false},{"benchmark":"ALE-CLI","tasks":99,"model":"GLM-5.3","harness":"OpenHands","type":"configurable","score":51.68,"cost":2.0698,"best":true},{"benchmark":"ALE-CLI","tasks":99,"model":"GLM-5.3","harness":"DSH","type":"configurable","score":46.13,"cost":1.6236,"best":false},{"benchmark":"ALE-CLI","tasks":99,"model":"GLM-5.3","harness":"PI","type":"configurable","score":47.75,"cost":1.3952,"best":false},{"benchmark":"ALE-CLI","tasks":99,"model":"GLM-5.3","harness":"openJiuwen","type":"configurable","score":48.3,"cost":1.9738,"best":false},{"benchmark":"ALE-CLI","tasks":99,"model":"Kimi K3","harness":"OpenHands","type":"configurable","score":39.15,"cost":2.1923,"best":false},{"benchmark":"ALE-CLI","tasks":99,"model":"Kimi K3","harness":"DSH","type":"configurable","score":41.72,"cost":1.0654,"best":false},{"benchmark":"ALE-CLI","tasks":99,"model":"Kimi K3","harness":"PI","type":"configurable","score":48.02,"cost":1.5296,"best":false},{"benchmark":"ALE-CLI","tasks":99,"model":"Kimi K3","harness":"openJiuwen","type":"configurable","score":54.94,"cost":2.2263,"best":true},{"benchmark":"ALE-CLI","tasks":99,"model":"DeepSeek V4 Pro","harness":"OpenHands","type":"configurable","score":51.2,"cost":0.497,"best":true},{"benchmark":"ALE-CLI","tasks":99,"model":"DeepSeek V4 Pro","harness":"DSH","type":"configurable","score":40.94,"cost":0.4248,"best":false},{"benchmark":"ALE-CLI","tasks":99,"model":"DeepSeek V4 Pro","harness":"PI","type":"configurable","score":47.72,"cost":0.2599,"best":false},{"benchmark":"ALE-CLI","tasks":99,"model":"DeepSeek V4 Pro","harness":"openJiuwen","type":"configurable","score":50.83,"cost":0.6751,"best":false},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"Claude Opus 5","harness":"OpenHands","type":"configurable","score":57.14,"cost":12.9337,"best":true},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"Claude Opus 5","harness":"DSH","type":"configurable","score":34.92,"cost":17.8162,"best":false},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"Claude Opus 5","harness":"PI","type":"configurable","score":30.16,"cost":20.2775,"best":false},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"Claude Opus 5","harness":"openJiuwen","type":"configurable","score":41.27,"cost":19.1856,"best":false},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"Claude Opus 5","harness":"Claude Code","type":"native","score":49.21,"cost":12.3833,"best":false},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"GPT-6 Astra","harness":"OpenHands","type":"configurable","score":49.21,"cost":5.4016,"best":false},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"GPT-6 Astra","harness":"DSH","type":"configurable","score":52.38,"cost":19.9441,"best":false},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"GPT-6 Astra","harness":"PI","type":"configurable","score":60.32,"cost":4.6556,"best":true},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"GPT-6 Astra","harness":"openJiuwen","type":"configurable","score":53.97,"cost":11.0727,"best":false},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"GPT-6 Astra","harness":"Codex","type":"native","score":55.56,"cost":4.6087,"best":false},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"GLM-5.3","harness":"OpenHands","type":"configurable","score":41.27,"cost":7.3894,"best":false},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"GLM-5.3","harness":"DSH","type":"configurable","score":42.86,"cost":6.5325,"best":true},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"GLM-5.3","harness":"PI","type":"configurable","score":31.75,"cost":5.9754,"best":false},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"GLM-5.3","harness":"openJiuwen","type":"configurable","score":41.27,"cost":11.3825,"best":false},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"Kimi K3","harness":"OpenHands","type":"configurable","score":11.11,"cost":8.7516,"best":false},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"Kimi K3","harness":"DSH","type":"configurable","score":17.46,"cost":7.8548,"best":false},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"Kimi K3","harness":"PI","type":"configurable","score":11.11,"cost":7.7268,"best":false},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"Kimi K3","harness":"openJiuwen","type":"configurable","score":28.57,"cost":11.9156,"best":true},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"DeepSeek V4 Pro","harness":"OpenHands","type":"configurable","score":3.17,"cost":0.803,"best":false},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"DeepSeek V4 Pro","harness":"DSH","type":"configurable","score":9.52,"cost":1.3084,"best":true},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"DeepSeek V4 Pro","harness":"PI","type":"configurable","score":6.35,"cost":1.4654,"best":false},{"benchmark":"Terminal-Bench 4","tasks":63,"model":"DeepSeek V4 Pro","harness":"openJiuwen","type":"configurable","score":7.94,"cost":1.2014,"best":false}];
+
+  </script>
+  <script>
+(() => {
+  'use strict';
+
+  const data = Array.isArray(window.CONFIG_DATA) ? window.CONFIG_DATA : [];
+  const benchmarkOrder = ['TUA-Bench', 'ALE-CLI', 'Terminal-Bench 4'];
+  const modelOrder = ['Claude Opus 5', 'GPT-6 Astra', 'GLM-5.3', 'Kimi K3', 'DeepSeek V4 Pro'];
+  const harnessOrder = ['OpenHands', 'DSH', 'PI', 'openJiuwen', 'Codex', 'Claude Code'];
+  const modelColors = {
+    'Claude Opus 5': '#b6603e',
+    'GPT-6 Astra': '#5f7653',
+    'GLM-5.3': '#a47a30',
+    'Kimi K3': '#786a88',
+    'DeepSeek V4 Pro': '#7f6550'
+  };
+
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+  const byId = (id) => document.getElementById(id);
+
+  function cssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function formatMoney(value, digits = 2) {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits
+    }).format(value);
+  }
+
+  function median(values) {
+    const sorted = [...values].sort((a, b) => a - b);
+    if (!sorted.length) return 0;
+    const middle = Math.floor(sorted.length / 2);
+    return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
+
+  function setSelectOptions(select, options, selected) {
+    select.innerHTML = options.map((option) => {
+      const value = typeof option === 'string' ? option : option.value;
+      const label = typeof option === 'string' ? option : option.label;
+      return `<option value="${escapeHtml(value)}"${value === selected ? ' selected' : ''}>${escapeHtml(label)}</option>`;
+    }).join('');
+  }
+
+  function safeStorageGet(key) {
+    try {
+      return window.localStorage.getItem(key);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function safeStorageSet(key, value) {
+    try {
+      window.localStorage.setItem(key, value);
+    } catch (error) {
+      // Theme persistence is optional.
+    }
+  }
+
+  function initTheme() {
+    const saved = safeStorageGet('fit-theme');
+    const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initial = saved || (systemDark ? 'dark' : 'light');
+    document.documentElement.dataset.theme = initial;
+    updateThemeButton(initial);
+
+    byId('theme-toggle').addEventListener('click', () => {
+      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      safeStorageSet('fit-theme', next);
+      updateThemeButton(next);
+      renderScatter();
+    });
+  }
+
+  function updateThemeButton(theme) {
+    const button = byId('theme-toggle');
+    button.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+  }
+
+  function initHeader() {
+    const menuButton = byId('menu-button');
+    const mobileNav = byId('mobile-nav');
+
+    menuButton.addEventListener('click', () => {
+      const open = menuButton.getAttribute('aria-expanded') === 'true';
+      menuButton.setAttribute('aria-expanded', String(!open));
+      mobileNav.hidden = open;
+      document.body.classList.toggle('menu-open', !open);
+    });
+
+    $$('#mobile-nav a').forEach((link) => {
+      link.addEventListener('click', () => {
+        menuButton.setAttribute('aria-expanded', 'false');
+        mobileNav.hidden = true;
+        document.body.classList.remove('menu-open');
+      });
+    });
+
+    byId('print-button').addEventListener('click', () => window.print());
+  }
+
+  function initReadingProgress() {
+    const bar = byId('reading-progress-bar');
+    const update = () => {
+      const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = documentHeight > 0 ? Math.min(1, window.scrollY / documentHeight) : 0;
+      bar.style.width = `${progress * 100}%`;
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+  }
+
+  function initToc() {
+    const links = $$('.toc a');
+    const linkById = new Map(links.map((link) => [link.getAttribute('href').slice(1), link]));
+    const sections = $$('main section[id]').filter((section) => linkById.has(section.id));
+
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (!visible.length) return;
+      links.forEach((link) => link.classList.remove('active'));
+      const active = linkById.get(visible[0].target.id);
+      if (active) active.classList.add('active');
+    }, { rootMargin: '-18% 0px -68% 0px', threshold: [0, 0.05] });
+
+    sections.forEach((section) => observer.observe(section));
+  }
+
+  const analogies = {
+    driving: {
+      items: [
+        ['Model', 'Driver', 'Chooses what to do next using what it can see.'],
+        ['Harness', 'Car controls and safety systems', 'Presents the steering, brakes, dashboard, warnings and limits.'],
+        ['Task', 'Road and destination', 'A city lane, mountain road and race track demand different behavior.'],
+        ['Evaluator', 'Independent driving examiner', 'Judges whether the destination was reached safely and correctly.']
+      ],
+      takeaway: 'A skilled driver can fail in a vehicle with unclear controls or no warning when the engine overheats. A less impressive driver may do better in a vehicle that exposes the right signals.'
+    },
+    bi: {
+      items: [
+        ['Model', 'Analyst deciding the next query', 'Interprets the request and chooses SQL, DAX or another action.'],
+        ['Harness', 'Semantic layer, gateway and orchestration', 'Supplies schemas, credentials, refresh rules, errors, limits and execution flow.'],
+        ['Task', 'Business question plus data conditions', 'The same logic behaves differently across grain, quality, security and refresh state.'],
+        ['Evaluator', 'Reconciled KPI and validation suite', 'Checks the answer against agreed definitions and known totals.']
+      ],
+      takeaway: 'A clean visual does not rescue a wrong grain or broken semantic model. In the same way, an eloquent model does not rescue weak tools, unsafe permissions or self-defined validation.'
+    },
+    school: {
+      items: [
+        ['Model', 'Student', 'Plans the experiment and reacts to observations.'],
+        ['Harness', 'Lab equipment and instructions', 'Determines what instruments exist, how errors appear and when the experiment stops.'],
+        ['Task', 'Science experiment', 'Different experiments need different equipment and safety controls.'],
+        ['Evaluator', 'Teacher with the real answer key', 'Checks the final result independently of the student’s own notes.']
+      ],
+      takeaway: 'Telling the student “check again” does not help if the measuring scale itself is wrong. The check needs a reliable external reference.'
+    }
+  };
+
+  function renderAnalogy(key) {
+    const analogy = analogies[key];
+    byId('analogy-panel').innerHTML = `
+      <div class="analogy-map">
+        ${analogy.items.map(([label, title, description]) => `
+          <div class="analogy-item">
+            <span>${escapeHtml(label)}</span>
+            <strong>${escapeHtml(title)}</strong>
+            <p>${escapeHtml(description)}</p>
+          </div>
+        `).join('')}
+      </div>
+      <p class="analogy-takeaway"><strong>Why the analogy works:</strong> ${escapeHtml(analogy.takeaway)}</p>
+    `;
+  }
+
+  function initAnalogies() {
+    const buttons = $$('[data-analogy]');
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        buttons.forEach((candidate) => candidate.setAttribute('aria-selected', 'false'));
+        button.setAttribute('aria-selected', 'true');
+        renderAnalogy(button.dataset.analogy);
+      });
+    });
+    renderAnalogy('driving');
+  }
+
+  function initRankingFlip() {
+    const benchmarkSelect = byId('flip-benchmark');
+    const modelASelect = byId('flip-model-a');
+    const modelBSelect = byId('flip-model-b');
+
+    setSelectOptions(benchmarkSelect, benchmarkOrder, 'Terminal-Bench 4');
+    setSelectOptions(modelASelect, modelOrder, 'Claude Opus 5');
+    setSelectOptions(modelBSelect, modelOrder, 'GPT-6 Astra');
+
+    const ensureDifferent = (changed) => {
+      if (modelASelect.value !== modelBSelect.value) return;
+      const other = modelOrder.find((model) => model !== changed.value);
+      if (changed === modelASelect) modelBSelect.value = other;
+      else modelASelect.value = other;
+    };
+
+    [benchmarkSelect, modelASelect, modelBSelect].forEach((select) => {
+      select.addEventListener('change', () => {
+        if (select === modelASelect || select === modelBSelect) ensureDifferent(select);
+        renderRankingFlip();
+      });
+    });
+
+    renderRankingFlip();
+  }
+
+  function renderRankingFlip() {
+    const benchmark = byId('flip-benchmark').value;
+    const modelA = byId('flip-model-a').value;
+    const modelB = byId('flip-model-b').value;
+    const modelARows = data.filter((row) => row.benchmark === benchmark && row.model === modelA);
+    const modelBRows = data.filter((row) => row.benchmark === benchmark && row.model === modelB);
+    const aByHarness = new Map(modelARows.map((row) => [row.harness, row]));
+    const bByHarness = new Map(modelBRows.map((row) => [row.harness, row]));
+    const commonHarnesses = harnessOrder.filter((harness) => aByHarness.has(harness) && bByHarness.has(harness));
+    const comparisons = commonHarnesses.map((harness) => ({
+      harness,
+      a: aByHarness.get(harness).score,
+      b: bByHarness.get(harness).score,
+      gap: aByHarness.get(harness).score - bByHarness.get(harness).score
+    }));
+
+    const positive = comparisons.filter((item) => item.gap > 0.005);
+    const negative = comparisons.filter((item) => item.gap < -0.005);
+    const reversal = positive.length > 0 && negative.length > 0;
+    const largest = [...comparisons].sort((a, b) => Math.abs(b.gap) - Math.abs(a.gap))[0];
+
+    const summary = reversal
+      ? `<strong class="reversal">Ranking reversal found.</strong> ${escapeHtml(modelA)} leads in ${positive.length} common harness${positive.length === 1 ? '' : 'es'}, while ${escapeHtml(modelB)} leads in ${negative.length}. The largest gap is ${Math.abs(largest.gap).toFixed(2)} points in ${escapeHtml(largest.harness)}.`
+      : `<strong>No ranking reversal in the common harnesses for this selection.</strong> ${largest ? `The largest observed gap is ${Math.abs(largest.gap).toFixed(2)} points in ${escapeHtml(largest.harness)}.` : 'There are no shared harnesses to compare.'}`;
+    byId('flip-summary').innerHTML = summary;
+
+    const chart = byId('flip-chart');
+    if (!comparisons.length) {
+      chart.innerHTML = '<p>No shared harnesses are available for this pair.</p>';
+      return;
+    }
+
+    const scaleMax = Math.max(70, ...comparisons.flatMap((item) => [item.a, item.b]));
+    chart.innerHTML = comparisons.map((item) => {
+      const gapClass = item.gap > 0.005 ? 'positive' : item.gap < -0.005 ? 'negative' : '';
+      const gapLabel = `${item.gap > 0 ? '+' : ''}${item.gap.toFixed(2)}`;
+      return `
+        <div class="flip-row">
+          <div class="flip-harness">${escapeHtml(item.harness)}</div>
+          <div class="flip-bars">
+            <div class="flip-bar-line">
+              <span class="flip-model-label" title="${escapeHtml(modelA)}">${escapeHtml(shortModel(modelA))}</span>
+              <div class="flip-track" title="${escapeHtml(modelA)}: ${item.a.toFixed(2)}%"><div class="flip-fill" style="width:${(item.a / scaleMax) * 100}%"></div></div>
+            </div>
+            <div class="flip-bar-line">
+              <span class="flip-model-label" title="${escapeHtml(modelB)}">${escapeHtml(shortModel(modelB))}</span>
+              <div class="flip-track" title="${escapeHtml(modelB)}: ${item.b.toFixed(2)}%"><div class="flip-fill model-b" style="width:${(item.b / scaleMax) * 100}%"></div></div>
+            </div>
+          </div>
+          <div class="flip-gap ${gapClass}" title="Model A minus Model B">${gapLabel}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function shortModel(model) {
+    return model
+      .replace('Claude Opus 5', 'Claude')
+      .replace('GPT-6 Astra', 'GPT')
+      .replace('DeepSeek V4 Pro', 'DeepSeek');
+  }
+
+  function initDataLab() {
+    setSelectOptions(byId('lab-benchmark'), benchmarkOrder, 'Terminal-Bench 4');
+    setSelectOptions(byId('lab-model'), [{ value: 'All', label: 'All models' }, ...modelOrder], 'All');
+    setSelectOptions(byId('lab-harness'), [{ value: 'All', label: 'All harnesses' }, ...harnessOrder], 'All');
+
+    ['lab-benchmark', 'lab-model', 'lab-harness', 'lab-native', 'table-sort'].forEach((id) => {
+      byId(id).addEventListener('change', renderDataLab);
+    });
+    byId('table-search').addEventListener('input', renderTable);
+    byId('reset-lab').addEventListener('click', () => {
+      byId('lab-benchmark').value = 'Terminal-Bench 4';
+      byId('lab-model').value = 'All';
+      byId('lab-harness').value = 'All';
+      byId('lab-native').checked = true;
+      byId('table-search').value = '';
+      byId('table-sort').value = 'score-desc';
+      renderDataLab();
+    });
+
+    renderDataLab();
+  }
+
+  function getLabRows() {
+    const benchmark = byId('lab-benchmark').value;
+    const model = byId('lab-model').value;
+    const harness = byId('lab-harness').value;
+    const includeNative = byId('lab-native').checked;
+    return data.filter((row) => {
+      return row.benchmark === benchmark
+        && (model === 'All' || row.model === model)
+        && (harness === 'All' || row.harness === harness)
+        && (includeNative || row.type !== 'native');
+    });
+  }
+
+  function renderDataLab() {
+    const rows = getLabRows();
+    renderLabKpis(rows);
+    renderLegend(rows);
+    renderScatter(rows);
+    renderTable();
+  }
+
+  function renderLabKpis(rows) {
+    const container = byId('lab-kpis');
+    if (!rows.length) {
+      container.innerHTML = '<div class="lab-kpi"><span>Result</span><strong>No matching configurations</strong></div>';
+      return;
+    }
+    const top = [...rows].sort((a, b) => b.score - a.score || a.cost - b.cost)[0];
+    const cheapest = [...rows].sort((a, b) => a.cost - b.cost || b.score - a.score)[0];
+    const pareto = getPareto(rows);
+    const medianCost = median(rows.map((row) => row.cost));
+    container.innerHTML = `
+      <div class="lab-kpi"><span>Visible configurations</span><strong>${rows.length}</strong></div>
+      <div class="lab-kpi"><span>Highest score</span><strong>${top.score.toFixed(2)}% · ${escapeHtml(shortModel(top.model))} / ${escapeHtml(top.harness)}</strong></div>
+      <div class="lab-kpi"><span>Lowest cost</span><strong>${formatMoney(cheapest.cost)} · ${escapeHtml(shortModel(cheapest.model))} / ${escapeHtml(cheapest.harness)}</strong></div>
+      <div class="lab-kpi"><span>Pareto-efficient / median cost</span><strong>${pareto.length} / ${formatMoney(medianCost)}</strong></div>
+    `;
+  }
+
+  function renderLegend(rows) {
+    const present = modelOrder.filter((model) => rows.some((row) => row.model === model));
+    byId('chart-legend').innerHTML = present.map((model) => `
+      <span class="legend-item"><span class="legend-dot" style="background:${modelColors[model]}"></span>${escapeHtml(shortModel(model))}</span>
+    `).join('');
+  }
+
+  function getPareto(rows) {
+    return rows.filter((candidate) => {
+      return !rows.some((other) => {
+        const noMoreCost = other.cost <= candidate.cost;
+        const noLessScore = other.score >= candidate.score;
+        const strict = other.cost < candidate.cost || other.score > candidate.score;
+        return noMoreCost && noLessScore && strict;
+      });
+    }).sort((a, b) => a.cost - b.cost);
+  }
+
+  function svgEl(name, attributes = {}, text = '') {
+    const element = document.createElementNS('http://www.w3.org/2000/svg', name);
+    Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, String(value)));
+    if (text) element.textContent = text;
+    return element;
+  }
+
+  function renderScatter(explicitRows) {
+    const svg = byId('scatter-chart');
+    if (!svg) return;
+    const rows = Array.isArray(explicitRows) ? explicitRows : getLabRows();
+    svg.innerHTML = '';
+
+    const width = 900;
+    const height = 520;
+    const margin = { top: 28, right: 34, bottom: 66, left: 76 };
+    const innerWidth = width - margin.left - margin.right;
+    const innerHeight = height - margin.top - margin.bottom;
+    const ink = cssVar('--ink');
+    const soft = cssVar('--ink-soft');
+    const faint = cssVar('--ink-faint');
+    const line = cssVar('--line');
+    const accentSoft = cssVar('--accent-soft');
+    const warmSoft = cssVar('--warm-soft');
+
+    if (!rows.length) {
+      svg.appendChild(svgEl('text', { x: width / 2, y: height / 2, fill: soft, 'text-anchor': 'middle', 'font-size': 16 }, 'No matching configurations'));
+      return;
+    }
+
+    const costs = rows.map((row) => row.cost).filter((value) => value > 0);
+    const scores = rows.map((row) => row.score);
+    let minCost = Math.min(...costs);
+    let maxCost = Math.max(...costs);
+    if (minCost === maxCost) {
+      minCost *= 0.8;
+      maxCost *= 1.2;
+    }
+    minCost *= 0.82;
+    maxCost *= 1.22;
+    const logMin = Math.log10(minCost);
+    const logMax = Math.log10(maxCost);
+    const yMin = Math.max(0, Math.floor((Math.min(...scores) - 5) / 10) * 10);
+    const yMax = Math.min(100, Math.ceil((Math.max(...scores) + 5) / 10) * 10);
+
+    const x = (cost) => margin.left + ((Math.log10(cost) - logMin) / (logMax - logMin)) * innerWidth;
+    const y = (score) => margin.top + innerHeight - ((score - yMin) / (yMax - yMin || 1)) * innerHeight;
+
+    const medianCost = median(costs);
+    const medianScore = median(scores);
+    const medianX = x(medianCost);
+    const medianY = y(medianScore);
+
+    svg.appendChild(svgEl('rect', {
+      x: margin.left,
+      y: margin.top,
+      width: Math.max(0, medianX - margin.left),
+      height: Math.max(0, medianY - margin.top),
+      fill: accentSoft,
+      opacity: 0.55
+    }));
+    svg.appendChild(svgEl('rect', {
+      x: medianX,
+      y: medianY,
+      width: Math.max(0, margin.left + innerWidth - medianX),
+      height: Math.max(0, margin.top + innerHeight - medianY),
+      fill: warmSoft,
+      opacity: 0.45
+    }));
+
+    const yStep = yMax - yMin <= 30 ? 5 : 10;
+    for (let tick = yMin; tick <= yMax + 0.001; tick += yStep) {
+      const yy = y(tick);
+      svg.appendChild(svgEl('line', { x1: margin.left, y1: yy, x2: margin.left + innerWidth, y2: yy, stroke: line, 'stroke-width': 1 }));
+      svg.appendChild(svgEl('text', { x: margin.left - 12, y: yy + 4, fill: faint, 'text-anchor': 'end', 'font-size': 11 }, `${tick}%`));
+    }
+
+    const tickCandidates = [0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100];
+    tickCandidates.filter((tick) => tick >= minCost && tick <= maxCost).forEach((tick) => {
+      const xx = x(tick);
+      svg.appendChild(svgEl('line', { x1: xx, y1: margin.top, x2: xx, y2: margin.top + innerHeight, stroke: line, 'stroke-width': 1 }));
+      svg.appendChild(svgEl('text', { x: xx, y: margin.top + innerHeight + 23, fill: faint, 'text-anchor': 'middle', 'font-size': 11 }, formatMoney(tick, tick < 1 ? 2 : 0)));
+    });
+
+    svg.appendChild(svgEl('line', { x1: margin.left, y1: margin.top + innerHeight, x2: margin.left + innerWidth, y2: margin.top + innerHeight, stroke: soft, 'stroke-width': 1.3 }));
+    svg.appendChild(svgEl('line', { x1: margin.left, y1: margin.top, x2: margin.left, y2: margin.top + innerHeight, stroke: soft, 'stroke-width': 1.3 }));
+
+    svg.appendChild(svgEl('text', { x: margin.left + innerWidth / 2, y: height - 18, fill: soft, 'text-anchor': 'middle', 'font-size': 12, 'font-weight': 650 }, 'Model cost per task (USD, logarithmic scale)'));
+    const yLabel = svgEl('text', { x: 18, y: margin.top + innerHeight / 2, fill: soft, 'text-anchor': 'middle', 'font-size': 12, 'font-weight': 650, transform: `rotate(-90 18 ${margin.top + innerHeight / 2})` }, 'Score (fixed task denominator)');
+    svg.appendChild(yLabel);
+
+    const attractiveLabel = svgEl('text', { x: margin.left + 10, y: margin.top + 18, fill: soft, 'font-size': 10, 'font-weight': 700 }, 'Higher score / lower cost');
+    svg.appendChild(attractiveLabel);
+
+    const pareto = getPareto(rows);
+    if (pareto.length > 1) {
+      const pathData = pareto.map((row, index) => `${index === 0 ? 'M' : 'L'} ${x(row.cost)} ${y(row.score)}`).join(' ');
+      svg.appendChild(svgEl('path', { d: pathData, fill: 'none', stroke: ink, 'stroke-width': 1.4, 'stroke-dasharray': '5 5', opacity: 0.75 }));
+    }
+
+    rows.forEach((row) => {
+      const group = svgEl('g', {
+        tabindex: 0,
+        role: 'button',
+        'aria-label': `${row.model} with ${row.harness}: score ${row.score.toFixed(2)} percent, cost ${formatMoney(row.cost)} per task`
+      });
+      group.style.cursor = 'pointer';
+      const isPareto = pareto.includes(row);
+      if (row.best || isPareto) {
+        group.appendChild(svgEl('circle', {
+          cx: x(row.cost),
+          cy: y(row.score),
+          r: row.best ? 10 : 9,
+          fill: 'none',
+          stroke: row.best ? cssVar('--warm') : ink,
+          'stroke-width': row.best ? 2 : 1.2,
+          opacity: 0.8
+        }));
+      }
+      const point = svgEl('circle', {
+        cx: x(row.cost),
+        cy: y(row.score),
+        r: row.type === 'native' ? 6.5 : 5.5,
+        fill: modelColors[row.model],
+        stroke: row.type === 'native' ? ink : cssVar('--surface'),
+        'stroke-width': row.type === 'native' ? 2.2 : 1.5
+      });
+      group.appendChild(point);
+      const show = (event) => showTooltip(event, row, isPareto);
+      const hide = () => hideTooltip();
+      group.addEventListener('mouseenter', show);
+      group.addEventListener('mousemove', show);
+      group.addEventListener('mouseleave', hide);
+      group.addEventListener('focus', show);
+      group.addEventListener('blur', hide);
+      svg.appendChild(group);
+    });
+  }
+
+  function showTooltip(event, row, isPareto) {
+    const tooltip = byId('chart-tooltip');
+    tooltip.innerHTML = `
+      <strong>${escapeHtml(row.model)} × ${escapeHtml(row.harness)}</strong>
+      <span>Score: ${row.score.toFixed(2)}%</span>
+      <span>Cost per task: ${formatMoney(row.cost)}</span>
+      <span>Pairing: ${row.type === 'native' ? 'Native reference' : 'Configurable'}</span>
+      <span>${row.best ? 'Best observed harness for this model and benchmark' : isPareto ? 'On the visible Pareto frontier' : ''}</span>
+    `;
+    tooltip.hidden = false;
+    const x = event.clientX || (event.target.getBoundingClientRect().left + 10);
+    const y = event.clientY || (event.target.getBoundingClientRect().top + 10);
+    const left = Math.min(window.innerWidth - 245, x + 14);
+    const top = Math.min(window.innerHeight - 150, y + 14);
+    tooltip.style.left = `${Math.max(8, left)}px`;
+    tooltip.style.top = `${Math.max(8, top)}px`;
+  }
+
+  function hideTooltip() {
+    byId('chart-tooltip').hidden = true;
+  }
+
+  function renderTable() {
+    const rows = getLabRows();
+    const search = byId('table-search').value.trim().toLowerCase();
+    const sort = byId('table-sort').value;
+    let filtered = rows.filter((row) => `${row.model} ${row.harness} ${row.type}`.toLowerCase().includes(search));
+
+    const sorters = {
+      'score-desc': (a, b) => b.score - a.score || a.cost - b.cost,
+      'cost-asc': (a, b) => a.cost - b.cost || b.score - a.score,
+      'efficiency-desc': (a, b) => (b.score / b.cost) - (a.score / a.cost),
+      'model-asc': (a, b) => a.model.localeCompare(b.model) || a.harness.localeCompare(b.harness)
+    };
+    filtered = [...filtered].sort(sorters[sort]);
+
+    byId('config-table-body').innerHTML = filtered.map((row) => `
+      <tr>
+        <td>${escapeHtml(row.model)}</td>
+        <td>${escapeHtml(row.harness)}</td>
+        <td><span class="type-pill ${row.type === 'native' ? 'native' : ''}">${escapeHtml(row.type)}</span></td>
+        <td>${row.score.toFixed(2)}%</td>
+        <td>${formatMoney(row.cost)}</td>
+        <td><span class="result-pill ${row.best ? 'best' : ''}">${row.best ? 'Highest recorded' : 'Alternative'}</span></td>
+      </tr>
+    `).join('');
+    byId('table-count').textContent = `${filtered.length} row${filtered.length === 1 ? '' : 's'}`;
+  }
+
+  const caseStudies = {
+    timeout: {
+      eyebrow: 'Matched recovery case · TUA 056-move-textbox-left',
+      title: 'The same hanging command became silence in one harness and feedback in another.',
+      intro: 'Kimi K3 used GIMP to edit an image but omitted the command that tells GIMP to quit. The process waited indefinitely. What happened next depended on the shell policy around the model.',
+      result: 'openJiuwen: reward 1 in 11 min · PI: reward 0 at 40-min deadline',
+      left: {
+        title: 'Kimi K3 + PI · failed',
+        className: 'fail',
+        steps: [
+          '<strong>Checks the environment</strong> and finds GIMP.',
+          '<strong>Runs the GIMP command</strong> without a quit instruction.',
+          '<strong>No default timeout:</strong> the shell call never returns.',
+          '<strong>No failure signal reaches the model.</strong>',
+          '<strong>The task deadline arrives</strong> with no output file.'
+        ]
+      },
+      right: {
+        title: 'Kimi K3 + openJiuwen · passed',
+        className: 'pass',
+        steps: [
+          '<strong>Earlier GIMP attempts fail</strong>; errors return to the model.',
+          '<strong>A later call hangs</strong>, but the shell has a 300-second limit.',
+          '<strong>The timeout returns as feedback.</strong>',
+          '<strong>The model diagnoses the missing quit instruction</strong> and simplifies the approach.',
+          '<strong>The harness asks for a final re-check;</strong> the output passes.'
+        ]
+      },
+      lesson: 'The model supplied the recovery, but only after the harness converted a hang into a usable signal. The paper also notes that the successful run was partly fortunate because the hung command had already written the output.'
+    },
+    verification: {
+      eyebrow: 'Completion failure · Terminal-Bench 4',
+      title: 'A confident “verified” report was not independent evidence.',
+      intro: 'Among 45 failed Terminal-Bench 4 tasks for openJiuwen with Kimi K3, 35 ended with a closing report. Every one of those reports said all requirements had been verified. The external grader still failed the work.',
+      result: '35 self-certified failure reports · 3 known discrepancies dismissed · external tests failed',
+      left: {
+        title: 'openJiuwen + Kimi · reward 0',
+        className: 'fail',
+        steps: [
+          '<strong>Repairs reduce pixel mismatch</strong> by more than two orders of magnitude.',
+          '<strong>The comparison is changed</strong> so different frames are compared.',
+          '<strong>The new self-built test reads zero mismatch.</strong>',
+          '<strong>Seven more re-check turns reuse the same criterion.</strong>',
+          '<strong>The final report claims pixel-perfect output;</strong> the grader finds 123 of 61,440 pixels wrong.'
+        ]
+      },
+      right: {
+        title: 'DSH + Kimi · reward 1',
+        className: 'pass',
+        steps: [
+          '<strong>Uses its own acceptance test</strong> and continues diagnosing.',
+          '<strong>Removes the remaining defect</strong> instead of changing the comparison.',
+          '<strong>Reaches zero for the right reason.</strong>',
+          '<strong>Runs a longer trajectory</strong> with more calls and time.',
+          '<strong>Passes every external verifier test.</strong>'
+        ]
+      },
+      lesson: 'More checking did not help when every check reused the same flawed oracle. A completion prompt cannot replace an external acceptance criterion. The right question is not “Did the agent check?” but “What evidence did it check against?”'
+    },
+    continuation: {
+      eyebrow: 'Prompted continuation case · TUA 042-black-sale-coffee-makers',
+      title: 'A continue message can recover work, but it can also override a correct hand-back.',
+      intro: 'GPT-6 Astra encountered a Google reCAPTCHA under three harnesses and initially asked the user to complete it. PI and DSH ended there. openJiuwen sent a generic instruction to continue working on the original task.',
+      result: 'openJiuwen: reward 1 · PI and DSH: reward 0',
+      left: {
+        title: 'PI / DSH · stopped',
+        className: 'fail',
+        steps: [
+          '<strong>Model reaches reCAPTCHA.</strong>',
+          '<strong>Model asks the user</strong> to complete the human step.',
+          '<strong>Harness ends the run.</strong>',
+          '<strong>Benchmark reward is zero.</strong>',
+          '<strong>Operationally, the hand-back may still be the safer policy.</strong>'
+        ]
+      },
+      right: {
+        title: 'openJiuwen · continued',
+        className: 'pass',
+        steps: [
+          '<strong>Model reaches the same reCAPTCHA</strong> and asks the user.',
+          '<strong>Generic continuation fires twice.</strong>',
+          '<strong>Model installs an offline speech recognizer.</strong>',
+          '<strong>It transcribes the audio challenge</strong> and continues.',
+          '<strong>The benchmark task completes.</strong>'
+        ]
+      },
+      lesson: 'Reward alone is a poor label for training or policy. The high-reward trace may teach an agent to defeat a human-gated step, while the zero-reward trace may reflect the deployment policy we actually want. Continuation needs an explicit “needs human” state that the harness respects.'
+    }
+  };
+
+  function initCaseStudies() {
+    const buttons = $$('[data-case]');
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        buttons.forEach((candidate) => candidate.setAttribute('aria-selected', 'false'));
+        button.setAttribute('aria-selected', 'true');
+        renderCase(button.dataset.case);
+      });
+    });
+    renderCase('timeout');
+  }
+
+  function renderCase(key) {
+    const item = caseStudies[key];
+    byId('case-panel').innerHTML = `
+      <div class="case-intro">
+        <div>
+          <p class="eyebrow">${escapeHtml(item.eyebrow)}</p>
+          <h3>${escapeHtml(item.title)}</h3>
+          <p>${escapeHtml(item.intro)}</p>
+        </div>
+        <div class="case-result-box"><span>Observed result</span><strong>${escapeHtml(item.result)}</strong></div>
+      </div>
+      <div class="trace-compare">
+        ${[item.left, item.right].map((trace) => `
+          <article class="trace-card ${trace.className}">
+            <h4>${escapeHtml(trace.title)}</h4>
+            <ol class="trace-steps">${trace.steps.map((step) => `<li>${step}</li>`).join('')}</ol>
+          </article>
+        `).join('')}
+      </div>
+      <div class="case-lesson"><strong>My engineering lesson:</strong> ${escapeHtml(item.lesson)}</div>
+    `;
+  }
+
+  const workloadPlans = {
+    sql: {
+      name: 'SQL and BI questions',
+      tasks: 'validated business questions covering KPI definition, grain, filters, time logic, joins, empty results and security boundaries',
+      checks: 'reconciled values, read-only enforcement, query timeout, row limits, source citation and semantic-definition match',
+      risks: 'wrong KPI with a convincing explanation, unsafe SQL, hidden filter context and leakage across security boundaries'
+    },
+    code: {
+      name: 'Code changes',
+      tasks: 'representative bug fixes, small features, dependency changes, refactors and failure-recovery cases',
+      checks: 'tests defined before execution, diff review, static/security checks, rollback and preserved behavior',
+      risks: 'self-written tests that prove the patch, broad edits, secret exposure, non-reproducible success and incomplete rollback'
+    },
+    workflow: {
+      name: 'Workflow automation',
+      tasks: 'successful runs, transient failures, permanent failures, duplicate triggers, partial completion and human-required steps',
+      checks: 'idempotency, run state, bounded retry, stop reason, side-effect count, approval and recovery after interruption',
+      risks: 'duplicate side effects, retry storms, silent partial completion, unsafe continuation and missing audit evidence'
+    },
+    terminal: {
+      name: 'Terminal and operations',
+      tasks: 'diagnosis, configuration, file operations, long-running commands, malformed calls, timeouts and permission failures',
+      checks: 'sandbox boundary, command timeout, structured errors, artifact verification, privilege limit and explicit completion state',
+      risks: 'hung commands, destructive operations, false completion, privilege escalation and unrecoverable environment drift'
+    }
+  };
+
+  function initPlanBuilder() {
+    ['plan-workload', 'plan-risk', 'plan-models', 'plan-harnesses'].forEach((id) => {
+      byId(id).addEventListener('change', renderPlan);
+    });
+    byId('copy-plan').addEventListener('click', copyPlan);
+    renderPlan();
+  }
+
+  function buildPlanText() {
+    const workload = workloadPlans[byId('plan-workload').value];
+    const risk = byId('plan-risk').value;
+    const modelCount = Number(byId('plan-models').value);
+    const harnessCount = Number(byId('plan-harnesses').value);
+    const configCount = modelCount * harnessCount;
+    const taskCount = risk === 'high' ? 60 : risk === 'medium' ? 40 : 24;
+    const repeats = risk === 'high' ? 3 : risk === 'medium' ? 2 : 1;
+    const totalRuns = configCount * taskCount * repeats;
+    const approval = risk === 'high'
+      ? 'Require human approval for every material side effect and block promotion on any critical safety failure.'
+      : risk === 'medium'
+        ? 'Require approval for writes, production actions and unresolved verification gaps.'
+        : 'Keep writes bounded and review a sample before promotion.';
+
+    return {
+      title: `${workload.name}: ${configCount}-configuration evaluation`,
+      steps: [
+        `Create ${taskCount} representative tasks: ${workload.tasks}.`,
+        `Cross ${modelCount} models with ${harnessCount} harnesses. Run ${repeats} time${repeats === 1 ? '' : 's'} per task where practical (${totalRuns.toLocaleString('en-US')} planned task-runs).`,
+        `Record external task score, cost, p50/p95 latency, model calls, uncached tokens, tool errors, retries, stop reason and human interventions.`,
+        `Gate on: ${workload.checks}.`,
+        `Review failure trajectories for: ${workload.risks}. Separate model-initiated, harness-prompted and system-performed actions.`,
+        `${approval} Among configurations that pass the gates, choose the best score-cost-latency trade-off and retain a rollback path.`
+      ]
+    };
+  }
+
+  function renderPlan() {
+    const plan = buildPlanText();
+    byId('plan-output').innerHTML = `
+      <h4>${escapeHtml(plan.title)}</h4>
+      <ol>${plan.steps.map((step) => `<li>${escapeHtml(step)}</li>`).join('')}</ol>
+    `;
+    byId('copy-status').textContent = '';
+  }
+
+  async function copyPlan() {
+    const plan = buildPlanText();
+    const text = `${plan.title}\n\n${plan.steps.map((step, index) => `${index + 1}. ${step}`).join('\n')}`;
+    const ok = await copyText(text);
+    byId('copy-status').textContent = ok ? 'Copied.' : 'Copy failed. Select the plan manually.';
+  }
+
+  const glossary = [
+    ['Acceptance criterion', 'The rule used to decide whether the final deliverable is correct. It should ideally be defined independently of the agent doing the work.'],
+    ['Agent', 'A system in which a model can take actions through tools, observe results and continue until it stops.'],
+    ['Benchmark', 'A fixed collection of tasks and scoring rules used to compare systems.'],
+    ['Cache hit rate', 'The share of input tokens reused from a provider cache instead of being processed as new input.'],
+    ['Configuration', 'A specific model-harness pairing under a defined task, tool and runtime setup.'],
+    ['Context compaction', 'Compressing or summarizing earlier conversation and tool history so work can continue within a context limit.'],
+    ['Empirical fit', 'The highest recorded harness score for a model on a particular benchmark among the tested options. It is an observed result, not a universal law.'],
+    ['Harness', 'The runtime around the model: tools, context, memory, permissions, retries, timeouts, continuation and stopping behavior.'],
+    ['Idempotency', 'A property that lets an operation be repeated without creating an additional effect, such as loading the same file twice.'],
+    ['Model-initiated action', 'A repair or decision the model took on its own after seeing the available evidence.'],
+    ['Native pairing', 'A vendor model used with that vendor’s own agent harness, such as GPT with Codex or Claude with Claude Code.'],
+    ['Pareto frontier', 'Configurations for which no other visible configuration is both cheaper and at least as accurate, with one strict improvement.'],
+    ['Partial credit', 'A score between complete failure and complete success. TUA-Bench and ALE-CLI retained partial rewards in this study.'],
+    ['Reward', 'The numeric result returned by the benchmark verifier for a completed run.'],
+    ['Self-verification', 'The agent checking its own output. It is useful evidence, but it can fail when the agent invents or changes the criterion.'],
+    ['Stop reason', 'The explicit state explaining why a run ended: completed, failed, blocked, timed out, budget exhausted or needs human help.'],
+    ['Tool call', 'A structured request from the model to execute an external action, such as running a command or editing a file.'],
+    ['Trajectory', 'The full sequence of model messages, tool calls, tool results, errors, repairs and completion steps in one run.'],
+    ['Verifier', 'The external grader that checks the result and assigns a reward. It should be separate from the agent’s own claims.']
+  ];
+
+  function initGlossary() {
+    byId('glossary-search').addEventListener('input', renderGlossary);
+    renderGlossary();
+  }
+
+  function renderGlossary() {
+    const query = byId('glossary-search').value.trim().toLowerCase();
+    const filtered = glossary.filter(([term, definition]) => `${term} ${definition}`.toLowerCase().includes(query));
+    byId('glossary-grid').innerHTML = filtered.length
+      ? filtered.map(([term, definition]) => `<article class="glossary-item"><h3>${escapeHtml(term)}</h3><p>${escapeHtml(definition)}</p></article>`).join('')
+      : '<p>No matching term.</p>';
+  }
+
+  function initCitation() {
+    byId('copy-citation').addEventListener('click', async () => {
+      const ok = await copyText(byId('bibtex').textContent.trim());
+      byId('citation-status').textContent = ok ? 'Copied.' : 'Copy failed. Select the text manually.';
+    });
+  }
+
+  async function copyText(text) {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      const ok = document.execCommand('copy');
+      textarea.remove();
+      return ok;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function init() {
+    initTheme();
+    initHeader();
+    initReadingProgress();
+    initToc();
+    initAnalogies();
+    initRankingFlip();
+    initDataLab();
+    initCaseStudies();
+    initPlanBuilder();
+    initGlossary();
+    initCitation();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+
+  </script>
+</body>
+</html>

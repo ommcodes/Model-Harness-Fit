@@ -1,0 +1,67 @@
+benchmark,task_count,model,harness,pairing_type,score,score_percent,total_cost_usd,cost_per_task_usd,best_for_model_benchmark
+TUA-Bench,120,Claude Opus 5,OpenHands,configurable,0.6523,65.23,86.60,0.7217,false
+TUA-Bench,120,Claude Opus 5,DSH,configurable,0.5884,58.84,91.74,0.7645,false
+TUA-Bench,120,Claude Opus 5,PI,configurable,0.5821,58.21,70.28,0.5857,false
+TUA-Bench,120,Claude Opus 5,openJiuwen,configurable,0.6539,65.39,162.44,1.3537,false
+TUA-Bench,120,Claude Opus 5,Claude Code,native,0.6889,68.89,113.73,0.9477,true
+TUA-Bench,120,GPT-6 Astra,OpenHands,configurable,0.6101,61.01,86.03,0.7169,false
+TUA-Bench,120,GPT-6 Astra,DSH,configurable,0.6432,64.32,150.97,1.2581,false
+TUA-Bench,120,GPT-6 Astra,PI,configurable,0.6538,65.38,76.92,0.6410,false
+TUA-Bench,120,GPT-6 Astra,openJiuwen,configurable,0.6635,66.35,157.62,1.3135,true
+TUA-Bench,120,GPT-6 Astra,Codex,native,0.6368,63.68,113.08,0.9423,false
+TUA-Bench,120,GLM-5.3,OpenHands,configurable,0.6286,62.86,51.86,0.4322,false
+TUA-Bench,120,GLM-5.3,DSH,configurable,0.5616,56.16,56.47,0.4706,false
+TUA-Bench,120,GLM-5.3,PI,configurable,0.5357,53.57,29.82,0.2485,false
+TUA-Bench,120,GLM-5.3,openJiuwen,configurable,0.6301,63.01,45.15,0.3762,true
+TUA-Bench,120,Kimi K3,OpenHands,configurable,0.5054,50.54,46.85,0.3904,false
+TUA-Bench,120,Kimi K3,DSH,configurable,0.5838,58.38,47.83,0.3986,false
+TUA-Bench,120,Kimi K3,PI,configurable,0.5878,58.78,33.51,0.2792,false
+TUA-Bench,120,Kimi K3,openJiuwen,configurable,0.6439,64.39,56.67,0.4723,true
+TUA-Bench,120,DeepSeek V4 Pro,OpenHands,configurable,0.5649,56.49,14.52,0.1210,false
+TUA-Bench,120,DeepSeek V4 Pro,DSH,configurable,0.5193,51.93,12.81,0.1067,false
+TUA-Bench,120,DeepSeek V4 Pro,PI,configurable,0.5758,57.58,12.07,0.1006,false
+TUA-Bench,120,DeepSeek V4 Pro,openJiuwen,configurable,0.6259,62.59,43.53,0.3628,true
+ALE-CLI,99,Claude Opus 5,OpenHands,configurable,0.5314,53.14,498.26,5.0329,false
+ALE-CLI,99,Claude Opus 5,DSH,configurable,0.4348,43.48,352.20,3.5576,false
+ALE-CLI,99,Claude Opus 5,PI,configurable,0.5022,50.22,323.34,3.2661,false
+ALE-CLI,99,Claude Opus 5,openJiuwen,configurable,0.5127,51.27,484.45,4.8934,false
+ALE-CLI,99,Claude Opus 5,Claude Code,native,0.5428,54.28,570.21,5.7597,true
+ALE-CLI,99,GPT-6 Astra,OpenHands,configurable,0.5386,53.86,275.51,2.7829,false
+ALE-CLI,99,GPT-6 Astra,DSH,configurable,0.4902,49.02,672.49,6.7928,false
+ALE-CLI,99,GPT-6 Astra,PI,configurable,0.5846,58.46,266.97,2.6967,true
+ALE-CLI,99,GPT-6 Astra,openJiuwen,configurable,0.5671,56.71,513.90,5.1909,false
+ALE-CLI,99,GPT-6 Astra,Codex,native,0.5630,56.30,481.88,4.8675,false
+ALE-CLI,99,GLM-5.3,OpenHands,configurable,0.5168,51.68,204.91,2.0698,true
+ALE-CLI,99,GLM-5.3,DSH,configurable,0.4613,46.13,160.74,1.6236,false
+ALE-CLI,99,GLM-5.3,PI,configurable,0.4775,47.75,138.12,1.3952,false
+ALE-CLI,99,GLM-5.3,openJiuwen,configurable,0.4830,48.30,195.41,1.9738,false
+ALE-CLI,99,Kimi K3,OpenHands,configurable,0.3915,39.15,217.04,2.1923,false
+ALE-CLI,99,Kimi K3,DSH,configurable,0.4172,41.72,105.47,1.0654,false
+ALE-CLI,99,Kimi K3,PI,configurable,0.4802,48.02,151.43,1.5296,false
+ALE-CLI,99,Kimi K3,openJiuwen,configurable,0.5494,54.94,220.40,2.2263,true
+ALE-CLI,99,DeepSeek V4 Pro,OpenHands,configurable,0.5120,51.20,49.20,0.4970,true
+ALE-CLI,99,DeepSeek V4 Pro,DSH,configurable,0.4094,40.94,42.06,0.4248,false
+ALE-CLI,99,DeepSeek V4 Pro,PI,configurable,0.4772,47.72,25.73,0.2599,false
+ALE-CLI,99,DeepSeek V4 Pro,openJiuwen,configurable,0.5083,50.83,66.83,0.6751,false
+Terminal-Bench 4,63,Claude Opus 5,OpenHands,configurable,0.5714,57.14,814.82,12.9337,true
+Terminal-Bench 4,63,Claude Opus 5,DSH,configurable,0.3492,34.92,1122.42,17.8162,false
+Terminal-Bench 4,63,Claude Opus 5,PI,configurable,0.3016,30.16,1277.48,20.2775,false
+Terminal-Bench 4,63,Claude Opus 5,openJiuwen,configurable,0.4127,41.27,1208.69,19.1856,false
+Terminal-Bench 4,63,Claude Opus 5,Claude Code,native,0.4921,49.21,780.15,12.3833,false
+Terminal-Bench 4,63,GPT-6 Astra,OpenHands,configurable,0.4921,49.21,340.30,5.4016,false
+Terminal-Bench 4,63,GPT-6 Astra,DSH,configurable,0.5238,52.38,1256.48,19.9441,false
+Terminal-Bench 4,63,GPT-6 Astra,PI,configurable,0.6032,60.32,293.30,4.6556,true
+Terminal-Bench 4,63,GPT-6 Astra,openJiuwen,configurable,0.5397,53.97,697.58,11.0727,false
+Terminal-Bench 4,63,GPT-6 Astra,Codex,native,0.5556,55.56,290.35,4.6087,false
+Terminal-Bench 4,63,GLM-5.3,OpenHands,configurable,0.4127,41.27,465.53,7.3894,false
+Terminal-Bench 4,63,GLM-5.3,DSH,configurable,0.4286,42.86,411.55,6.5325,true
+Terminal-Bench 4,63,GLM-5.3,PI,configurable,0.3175,31.75,376.45,5.9754,false
+Terminal-Bench 4,63,GLM-5.3,openJiuwen,configurable,0.4127,41.27,717.10,11.3825,false
+Terminal-Bench 4,63,Kimi K3,OpenHands,configurable,0.1111,11.11,551.35,8.7516,false
+Terminal-Bench 4,63,Kimi K3,DSH,configurable,0.1746,17.46,494.85,7.8548,false
+Terminal-Bench 4,63,Kimi K3,PI,configurable,0.1111,11.11,486.79,7.7268,false
+Terminal-Bench 4,63,Kimi K3,openJiuwen,configurable,0.2857,28.57,750.68,11.9156,true
+Terminal-Bench 4,63,DeepSeek V4 Pro,OpenHands,configurable,0.0317,3.17,50.59,0.8030,false
+Terminal-Bench 4,63,DeepSeek V4 Pro,DSH,configurable,0.0952,9.52,82.43,1.3084,true
+Terminal-Bench 4,63,DeepSeek V4 Pro,PI,configurable,0.0635,6.35,92.32,1.4654,false
+Terminal-Bench 4,63,DeepSeek V4 Pro,openJiuwen,configurable,0.0794,7.94,75.69,1.2014,false
